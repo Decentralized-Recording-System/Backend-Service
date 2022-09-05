@@ -1,0 +1,33 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema(
+	{
+		userId: { type: String, required: true , unique: true},
+		email: { type: String, required: true, unique: true },
+		name: { type: String, required: true, unique: false },
+		lastName: { type: String, required: true, unique: false },
+		gender: { type: String, required: true },
+		dateOfBirth: { type: Date, required: true },
+		active: { type: Boolean, required: true, default: false },
+		password: { type: String, required: true },
+		resetPasswordToken: { type: String, required: false, default: null },
+		resetPasswordExpires: { type: Date, required: false, default: null },
+		emailToken: { type: String, required: false,default: null },
+		emailTokenExpires: { type: Date, required: false,default: null },
+		accessToken: { type: String, required: false,default: null },
+		mnemonic: { type: String, required: false, default: null },
+		phone: { type: String, required: false, default: null },
+		address: { type: String, required: false, default: null },
+		publicKey: { type: String, required: false, default: null },
+		macAddress :{ type: String, required: true }
+	},
+	{
+		timestamps: {
+			createdAt: 'createdAt',
+			updatedAt: 'updatedAt',
+		},
+	}
+);
+const Users = mongoose.model('users', userSchema);
+module.exports = { Users };
