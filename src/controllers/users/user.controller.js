@@ -121,7 +121,6 @@ exports.Login = async (req, res) => {
 			success: true,
 			email: email,
 			message: 'User logged in successfully',
-			role: user.role,
 			accessToken: token, //Send it to the client
 		});
 	} catch (err) {
@@ -337,3 +336,43 @@ exports.Logout = async (req, res) => {
 	}
 };
 
+// ------------------------------------------------- check accessToken--------------------------------------------------------
+
+exports.CheckAccessToken = async (req, res) => {
+	try {
+		const { id } = req.decodedData;
+		return res.send({ success: true, message: 'you are in' });
+	} catch (error) {
+		console.error('you are not in', error);
+		return res.status(500).json({
+			error: true,
+			message: error.message,
+		});
+	}
+};
+
+// ------------------------------------------------- get user data--------------------------------------------------------
+
+exports.GetUserData = async (req, res) => {
+	try {
+		const { id } = req.decodedData;
+		const user = await Users.findOne({ userId: id });
+		return res.send({
+			success: true,
+			message: 'Get user data success',
+			userId: user.userId,
+			Name: user.name,
+			LastName: user.lastName,
+			email: user.email,
+			gender: user.gender,
+			dateOfBirth: user.dateOfBirth,
+			phone: user.phone,
+		});
+	} catch (error) {
+		console.error('cannot get data ', error);
+		return res.status(500).json({
+			error: true,
+			message: error.message,
+		});
+	}
+};
