@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const options = {
-	expiresIn: '14d',
+	expiresIn: '30d',
 };
 async function generateJwt(email, userId) {
 	try {
