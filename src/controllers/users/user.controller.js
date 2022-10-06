@@ -15,7 +15,7 @@ exports.Register = async (req, res) => {
 	try {
 		const result = userSchema.validate(req.body);
 		if (result.error) {
-			return res.json({
+			return res.status(400).json({
 				error: true,
 				status: 400,
 				message: result.error.message,
@@ -25,7 +25,7 @@ exports.Register = async (req, res) => {
 			email: result.value.email,
 		});
 		if (user) {
-			return res.json({
+			return res.status(400).json({
 				error: true,
 				message: 'Email is already in use',
 			});
@@ -117,7 +117,7 @@ exports.Login = async (req, res) => {
 		user.accessToken = token;
 		user.email = email;
 		await user.save();
-		return res.send({
+		return res.status(200).send({
 			success: true,
 			email: email,
 			message: 'User logged in successfully',
@@ -138,7 +138,7 @@ exports.Activate = async (req, res) => {
 	try {
 		const { email, code } = req.body;
 		if (!(email && code)) {
-			return res.json({
+			return res.status(400).json({
 				error: true,
 				status: 400,
 				message: 'Please make a valid request',
@@ -156,7 +156,7 @@ exports.Activate = async (req, res) => {
 			});
 		} else {
 			if (user.active)
-				return res.send({
+				return res.status(400).send({
 					error: true,
 					message: 'Account already activated',
 					status: 400,
@@ -183,7 +183,7 @@ exports.ForgotPassword = async (req, res) => {
 	try {
 		const { email } = req.body;
 		if (!email) {
-			return res.send({
+			return res.status(400).send({
 				status: 400,
 				error: true,
 				message: 'Cannot be processed',
@@ -193,7 +193,7 @@ exports.ForgotPassword = async (req, res) => {
 			email: email,
 		});
 		if (!user) {
-			return res.send({
+			return res.status(200).send({
 				success: true,
 				message:
 					'If that email address is in our database, we will send you an email to reset your password',
@@ -211,7 +211,7 @@ exports.ForgotPassword = async (req, res) => {
 		user.resetPasswordToken = code;
 		user.resetPasswordExpires = expiry; // 15 minutes
 		await user.save();
-		return res.send({
+		return res.status(200).send({
 			success: true,
 			message:
 				'If that email address is in our database, we will send you an email to reset your password',
@@ -242,7 +242,7 @@ exports.ResetPassword = async (req, res) => {
 			resetPasswordExpires: { $gt: Date.now() },
 		});
 		if (!user) {
-			return res.send({
+			return res.status(400).send({
 				error: true,
 				message: 'Password reset token is invalid or has expired.',
 			});
@@ -258,7 +258,7 @@ exports.ResetPassword = async (req, res) => {
 		user.resetPasswordToken = null;
 		user.resetPasswordExpires = '';
 		await user.save();
-		return res.send({
+		return res.status(200).send({
 			success: true,
 			message: 'Password has been changed',
 		});
@@ -277,7 +277,7 @@ exports.ReActivate = async (req, res) => {
 	try {
 		const { email } = req.body;
 		if (!email) {
-			return res.send({
+			return res.status(400).send({
 				status: 400,
 				error: true,
 				message: 'Cannot be processed',
@@ -287,7 +287,7 @@ exports.ReActivate = async (req, res) => {
 			email: email,
 		});
 		if (!user) {
-			return res.send({
+			return res.status(200).send({
 				success: true,
 				message:
 					'If that email address is in our database, we will send you an email to reset your password',
@@ -305,7 +305,7 @@ exports.ReActivate = async (req, res) => {
 		user.emailToken = code;
 		user.emailTokenExpires = expiry; // 15 minutes
 		await user.save();
-		return res.send({
+		return res.status(200).send({
 			success: true,
 			message: 'You must verify your email to activate your account',
 		});
@@ -326,7 +326,7 @@ exports.Logout = async (req, res) => {
 		let user = await Users.findOne({ userId: id });
 		user.accessToken = '';
 		await user.save();
-		return res.send({ success: true, message: 'User Logged out' });
+		return res.status(200).send({ success: true, message: 'User Logged out' });
 	} catch (error) {
 		console.error('user logout error', error);
 		return res.status(500).json({
@@ -341,7 +341,7 @@ exports.Logout = async (req, res) => {
 exports.CheckAccessToken = async (req, res) => {
 	try {
 		const { id } = req.decodedData;
-		return res.send({ success: true, message: 'you are in' });
+		return res.status(200).send({ success: true, message: 'you are in' });
 	} catch (error) {
 		console.error('you are not in', error);
 		return res.status(500).json({
@@ -357,7 +357,7 @@ exports.GetUserData = async (req, res) => {
 	try {
 		const { id } = req.decodedData;
 		const user = await Users.findOne({ userId: id });
-		return res.send({
+		return res.status(200).send({
 			success: true,
 			message: 'Get user data success',
 			userId: user.userId,
