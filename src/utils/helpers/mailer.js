@@ -4,10 +4,10 @@ async function sendEmail(email, code) {
 	try {
 		const smtpEndpoint = 'smtp.gmail.com';
 		const port = 465;
-		const senderAddress = 'indy.nathaphon@gmail.com';
+		const senderAddress = 'nathaphon.nindy@gmail.com';
 		var toAddress = email;
-		const smtpUsername = 'indy.nathaphon@gmail.com';
-		const smtpPassword = process.env.MAIL_APIKEY;
+		const smtpUsername = 'nathaphon.nindy@gmail.com';
+		const smtpPassword = process.env.MAIL_APIKEY_awata;
 		var subject = 'Verify your email';
 		// The body of the email for recipients
 		var body_html = `<!DOCTYPE> 
