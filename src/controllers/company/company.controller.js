@@ -3,9 +3,9 @@ require('dotenv').config();
 const { v4: uuid } = require('uuid');
 const { sendEmail } = require('../../utils/helpers/mailer');
 const { generateMnemonic } = require('../../utils/helpers/generateMnemonic');
-const { Users } = require('./../../models/users/user.model');
+const { Company } = require('../../models/company/company.model');
 const { getUserCredential } = require('../../utils/helpers/getUserCredentials');
-const { userSchema } = require('../users/models/register.request')
+const { companySchema } = require('../company/models/register.request')
 const { hashPassword } = require('../../utils/helpers/login.service')
 const { generateJwt } = require('../../utils/helpers/generateJwt')
 
@@ -13,7 +13,7 @@ const { generateJwt } = require('../../utils/helpers/generateJwt')
 
 exports.Register = async (req, res) => {
 	try {
-		const result = userSchema.validate(req.body);
+		const result = companySchema.validate(req.body);
 		if (result.error) {
 			return res.status(400).json({
 				error: true,
@@ -21,10 +21,10 @@ exports.Register = async (req, res) => {
 				message: result.error.message,
 			});
 		}
-		const user = await Users.findOne({
+		const company = await Company.findOne({
 			email: result.value.email,
 		});
-		if (user) {
+		if (company) {
 			return res.status(400).json({
 				error: true,
 				message: 'Email is already in use',
@@ -32,8 +32,8 @@ exports.Register = async (req, res) => {
 		}
 
 		const hash = await hashPassword(result.value.password);
-		const id = uuid(); //Generate unique id for the user.
-		result.value.userId = id;
+		const id = uuid(); //Generate unique id for the company.
+		result.value.companyId = id;
 		//remove the confirmPassword field from the result as we dont need to save this in the db.
 		delete result.value.confirmPassword;
 		result.value.password = hash;
@@ -48,7 +48,7 @@ exports.Register = async (req, res) => {
 		}
 		result.value.emailToken = code;
 		result.value.emailTokenExpires = new Date(expiry);
-		// Generate new Mnemonic for user
+		// Generate new Mnemonic for company
 		const { mnemonic: generatedMnemonic } = generateMnemonic();
 		result.value.mnemonic = generatedMnemonic;
 		// create publicKey and address
@@ -56,7 +56,7 @@ exports.Register = async (req, res) => {
 		result.value.publicKey = publicKey;
 		result.value.address = address;
 
-		const newUser = new Users(result.value);
+		const newUser = new Company(result.value);
 		await newUser.save();
 		return res.status(200).json({
 			success: true,
@@ -77,28 +77,28 @@ exports.Login = async (req, res) => {
 		if (!email || !password) {
 			return res.status(400).json({
 				error: true,
-				message: 'Cannot authorize user.',
+				message: 'Cannot authorize company.',
 			});
 		}
 		//1. Find if any account with that email exists in DB
-		const user = await Users.findOne({ email: email });
+		const company = await Company.findOne({ email: email });
 		// NOT FOUND - Throw error
-		if (!user) {
+		if (!company) {
 			return res.status(404).json({
 				error: true,
 				message: 'Account not found',
 			});
 		}
 		//2. Throw error if account is not activated
-		if (!user.active) {
+		if (!company.active) {
 			return res.status(400).json({
 				error: true,
 				message: 'You must verify your email to activate your account',
 			});
 		}
 		//3. Verify the password is valid
-		//const isValid = await User.comparePasswords(password, user.password);
-		const isValid = await bcrypt.compare(password, user.password);
+		//const isValid = await User.comparePasswords(password, company.password);
+		const isValid = await bcrypt.compare(password, company.password);
 		if (!isValid) {
 			return res.status(400).json({
 				error: true,
@@ -107,16 +107,16 @@ exports.Login = async (req, res) => {
 		}
 		/************************************************************************/
 		//Generate Access token
-		const { error, token } = await generateJwt(user.email, user.userId);
+		const { error, token } = await generateJwt(company.email, company.companyId);
 		if (error) {
 			return res.status(500).json({
 				error: true,
 				message: "Couldn't create access token. Please try again later",
 			});
 		}
-		user.accessToken = token;
-		user.email = email;
-		await user.save();
+		company.accessToken = token;
+		company.email = email;
+		await company.save();
 		return res.status(200).send({
 			success: true,
 			email: email,
@@ -144,25 +144,25 @@ exports.Activate = async (req, res) => {
 				message: 'Please make a valid request',
 			});
 		}
-		const user = await Users.findOne({
+		const company = await Company.findOne({
 			email: email,
 			emailToken: code,
 			emailTokenExpires: { $gt: Date.now() }, // check if the code is expired
 		});
-		if (!user) {
+		if (!company) {
 			return res.status(400).json({
 				error: true,
-				message: 'Invalid details, user not found',
+				message: 'Invalid details, company not found',
 			});
 		} else {
-			if (user.active)
+			if (company.active)
 				return res.status(400).send({
 					error: true,
 					message: 'Account already activated',
 					status: 400,
 				});
-			user.active = true;
-			await user.save();
+			company.active = true;
+			await company.save();
 			return res.status(200).json({
 				success: true,
 				message: 'Account activated.',
@@ -189,10 +189,10 @@ exports.ForgotPassword = async (req, res) => {
 				message: 'Cannot be processed',
 			});
 		}
-		const user = await Users.findOne({
+		const company = await Company.findOne({
 			email: email,
 		});
-		if (!user) {
+		if (!company) {
 			return res.status(200).send({
 				success: true,
 				message:
@@ -200,7 +200,7 @@ exports.ForgotPassword = async (req, res) => {
 			});
 		}
 		let code = Math.floor(100000 + Math.random() * 900000);
-		let response = await sendEmail(user.email, code);
+		let response = await sendEmail(company.email, code);
 		if (response.error) {
 			return res.status(500).json({
 				error: true,
@@ -208,9 +208,9 @@ exports.ForgotPassword = async (req, res) => {
 			});
 		}
 		let expiry = new Date(Date.now() + 60 * 1000 * 15);
-		user.resetPasswordToken = code;
-		user.resetPasswordExpires = expiry; // 15 minutes
-		await user.save();
+		company.resetPasswordToken = code;
+		company.resetPasswordExpires = expiry; // 15 minutes
+		await company.save();
 		return res.status(200).send({
 			success: true,
 			message:
@@ -237,11 +237,11 @@ exports.ResetPassword = async (req, res) => {
 					"Couldn't process request. Please provide all mandatory fields",
 			});
 		}
-		const user = await Users.findOne({
+		const company = await Company.findOne({
 			resetPasswordToken: req.body.token,
 			resetPasswordExpires: { $gt: Date.now() },
 		});
-		if (!user) {
+		if (!company) {
 			return res.status(400).send({
 				error: true,
 				message: 'Password reset token is invalid or has expired.',
@@ -254,10 +254,10 @@ exports.ResetPassword = async (req, res) => {
 			});
 		}
 		const hash = await hashPassword(req.body.newPassword);
-		user.password = hash;
-		user.resetPasswordToken = null;
-		user.resetPasswordExpires = null;
-		await user.save();
+		company.password = hash;
+		company.resetPasswordToken = null;
+		company.resetPasswordExpires = null;
+		await company.save();
 		return res.status(200).send({
 			success: true,
 			message: 'Password has been changed',
@@ -283,10 +283,10 @@ exports.ReActivate = async (req, res) => {
 				message: 'Cannot be processed',
 			});
 		}
-		const user = await Users.findOne({
+		const company = await Company.findOne({
 			email: email,
 		});
-		if (!user) {
+		if (!company) {
 			return res.status(200).send({
 				success: true,
 				message:
@@ -294,7 +294,7 @@ exports.ReActivate = async (req, res) => {
 			});
 		}
 		let code = Math.floor(100000 + Math.random() * 900000);
-		let response = await sendEmail(user.email, code);
+		let response = await sendEmail(company.email, code);
 		if (response.error) {
 			return res.status(500).json({
 				error: true,
@@ -302,9 +302,9 @@ exports.ReActivate = async (req, res) => {
 			});
 		}
 		let expiry = new Date(Date.now() + 60 * 1000 * 15);
-		user.emailToken = code;
-		user.emailTokenExpires = expiry; // 15 minutes
-		await user.save();
+		company.emailToken = code;
+		company.emailTokenExpires = expiry; // 15 minutes
+		await company.save();
 		return res.status(200).send({
 			success: true,
 			message: 'You must verify your email to activate your account',
@@ -323,12 +323,12 @@ exports.ReActivate = async (req, res) => {
 exports.Logout = async (req, res) => {
 	try {
 		const { id } = req.decodedData;
-		let user = await Users.findOne({ userId: id });
-		user.accessToken = '';
-		await user.save();
+		let company = await Company.findOne({ userId: id });
+		company.accessToken = '';
+		await company.save();
 		return res.status(200).send({ success: true, message: 'User Logged out' });
 	} catch (error) {
-		console.error('user logout error', error);
+		console.error('company logout error', error);
 		return res.status(500).json({
 			error: true,
 			message: error.message,
@@ -351,22 +351,18 @@ exports.CheckAccessToken = async (req, res) => {
 	}
 };
 
-// ------------------------------------------------- get user data--------------------------------------------------------
+// ------------------------------------------------- get company data--------------------------------------------------------
 
 exports.GetUserData = async (req, res) => {
 	try {
 		const { id } = req.decodedData;
-		const user = await Users.findOne({ userId: id });
+		const company = await Company.findOne({ userId: id });
 		return res.status(200).send({
 			success: true,
-			message: 'Get user data success',
-			userId: user.userId,
-			Name: user.name,
-			LastName: user.lastName,
-			email: user.email,
-			gender: user.gender,
-			dateOfBirth: user.dateOfBirth,
-			phone: user.phone,
+			message: 'Get company data success',
+			userId: company.companyId,
+			Name: company.companyName,
+			email: company.email,
 		});
 	} catch (error) {
 		console.error('cannot get data ', error);

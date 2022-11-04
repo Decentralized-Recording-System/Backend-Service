@@ -3,12 +3,9 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
 	{
-		userId: { type: String, required: true , unique: true},
+		companyId: { type: String, required: true , unique: true},
 		email: { type: String, required: true, unique: true },
-		name: { type: String, required: true, unique: false },
-		lastName: { type: String, required: true, unique: false },
-		gender: { type: String, required: true },
-		dateOfBirth: { type: Date, required: true },
+		companyName: { type: String, required: true, unique: false },
 		active: { type: Boolean, required: true, default: false },
 		password: { type: String, required: true },
 		resetPasswordToken: { type: Number, required: false, default: null },
@@ -17,10 +14,8 @@ const userSchema = new Schema(
 		emailTokenExpires: { type: Date, required: false,default: null },
 		accessToken: { type: String, required: false,default: null },
 		mnemonic: { type: String, required: false, default: null },
-		phone: { type: String, required: false, default: null },
 		address: { type: String, required: false, default: null },
 		publicKey: { type: String, required: false, default: null },
-		macAddress :{ type: String, required: true }
 	},
 	{
 		timestamps: {
@@ -29,5 +24,5 @@ const userSchema = new Schema(
 		},
 	}
 );
-const Users = mongoose.model('users', userSchema);
-module.exports = { Users };
+const Company = mongoose.model('company', userSchema);
+module.exports = { Company };
