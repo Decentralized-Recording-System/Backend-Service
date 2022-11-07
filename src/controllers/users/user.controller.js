@@ -5,9 +5,12 @@ const { sendEmail } = require('../../utils/helpers/mailer');
 const { generateMnemonic } = require('../../utils/helpers/generateMnemonic');
 const { Users } = require('./../../models/users/user.model');
 const { getUserCredential } = require('../../utils/helpers/getUserCredentials');
-const { userSchema } = require('../users/models/register.request')
-const { hashPassword } = require('../../utils/helpers/login.service')
-const { generateJwt } = require('../../utils/helpers/generateJwt')
+const { userSchema } = require('../users/models/register.request');
+const { hashPassword } = require('../../utils/helpers/login.service');
+const { generateJwt } = require('../../utils/helpers/generateJwt');
+const { adminProvider } = require('../../utils/helpers/blockchain/initializeAdminProvider');
+const ethers = require('ethers');
+const drsABI = require('../../utils/helpers/blockchain/abi/drsABI.json');
 
 // ------------------------------------------------- Register --------------------------------------------------------
 
@@ -161,6 +164,11 @@ exports.Activate = async (req, res) => {
 					message: 'Account already activated',
 					status: 400,
 				});
+			// interact blockchain add address
+			let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+			const { walletSigner } = adminProvider();
+			let contract = new ethers.Contract(contractAddress, drsABI, walletSigner);
+			await contract.addAddress(user.address);
 			user.active = true;
 			await user.save();
 			return res.status(200).json({
@@ -368,6 +376,37 @@ exports.GetUserData = async (req, res) => {
 			dateOfBirth: user.dateOfBirth,
 			phone: user.phone,
 		});
+	} catch (error) {
+		console.error('cannot get data ', error);
+		return res.status(500).json({
+			error: true,
+			message: error.message,
+		});
+	}
+};
+
+// ------------------------------------------------- get user data--------------------------------------------------------
+
+exports.TestData = async (req, res) => {
+	try {
+		let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+		const { walletSigner } = adminProvider();
+		let contract = new ethers.Contract(contractAddress, drsABI, walletSigner);
+		//---------- test 1 get data 
+		// let currentValue = await contract.getUser();
+		// console.log(currentValue);
+		// console.log(currentValue[0]["dangerous_brake"].toNumber());
+		//---------- test 2 add address 
+		await contract.addAddress("0xb75c279D967Ad2cFFc2E10C0Fab34940b13c471f");
+
+		// walletSigner.getAddress().then((result) => {
+		// 	console.log("Current block number: " + result);
+		// });
+		//---------- test 23 get all address
+		// let currentValue = await contract.getAllAddress();
+		// console.log(currentValue);
+		// console.log(currentValue[0]["dangerous_brake"].toNumber());
+		return res.status(200).send();
 	} catch (error) {
 		console.error('cannot get data ', error);
 		return res.status(500).json({
