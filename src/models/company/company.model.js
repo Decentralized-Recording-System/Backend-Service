@@ -16,6 +16,7 @@ const userSchema = new Schema(
 		mnemonic: { type: String, required: false, default: null },
 		address: { type: String, required: false, default: null },
 		publicKey: { type: String, required: false, default: null },
+		activeCompany: { type: Boolean, required: false, default: false }
 	},
 	{
 		timestamps: {
