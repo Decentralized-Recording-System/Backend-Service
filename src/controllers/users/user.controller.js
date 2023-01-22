@@ -429,8 +429,8 @@ exports.AddDrivingData = async (req, res) => {
 		const { data} = req.body;
 
 		let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
-		
-		const { walletSigner } = userProvider(user.markModified);
+
+		const { walletSigner } = userProvider(user.address);
 
 		let contract = new ethers.Contract(contractAddress, DRS_DATA_STORE, walletSigner);
 
