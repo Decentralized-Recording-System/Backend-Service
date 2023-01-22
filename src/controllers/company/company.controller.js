@@ -7,7 +7,11 @@ const { Company } = require('../../models/company/company.model');
 const { getUserCredential } = require('../../utils/helpers/getUserCredentials');
 const { companySchema } = require('../company/models/register.request')
 const { hashPassword } = require('../../utils/helpers/login.service')
-const { generateJwt } = require('../../utils/helpers/generateJwt')
+const { generateJwt } = require('../../utils/helpers/generateJwt');
+const ethers = require('ethers');
+const { adminProvider } = require('../../utils/helpers/blockchain/initializeAdminProvider');
+const DRS_DATA_STORE = require('../../utils/helpers/blockchain/abi/DRS_DATA_STORE.json');
+const { userProvider } = require('../../utils/helpers/blockchain/initializeUserProvider');
 
 // ------------------------------------------------- Register --------------------------------------------------------
 
@@ -161,6 +165,15 @@ exports.Activate = async (req, res) => {
 					message: 'Account already activated',
 					status: 400,
 				});
+
+			// interact blockchain add address
+
+			let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+			const { walletSigner } = adminProvider();
+			let contract = new ethers.Contract(contractAddress, DRS_DATA_STORE, walletSigner);
+			await contract.addAddress(company.address);
+
+			//save 
 			company.active = true;
 			await company.save();
 			return res.status(200).json({
@@ -364,6 +377,34 @@ exports.GetUserData = async (req, res) => {
 			Name: company.companyName,
 			email: company.email,
 		});
+	} catch (error) {
+		console.error('cannot get data ', error);
+		return res.status(500).json({
+			error: true,
+			message: error.message,
+		});
+	}
+};
+
+// ------------------------------------------------- get all user data--------------------------------------------------------
+
+exports.GetAllUserDrivingData = async (req, res) => {
+	try {
+		const { id } = req.decodedData;
+
+		const company = await Company.findOne({ userId: id });
+
+		let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+
+		const { walletSigner } = userProvider(company.mnemonic);
+
+		let contract = new ethers.Contract(contractAddress, DRS_DATA_STORE, walletSigner);
+
+		const result =  await contract.GetAllUserDrivingData();
+
+		console.log("result",result);
+
+		return res.status(200).send();
 	} catch (error) {
 		console.error('cannot get data ', error);
 		return res.status(500).json({

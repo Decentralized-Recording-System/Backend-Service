@@ -1,0 +1,230 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "member",
+				"type": "address"
+			}
+		],
+		"name": "AddUserAddress",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "braking",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dangerousBrake",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dangerousTurn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dangerousSpeed",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "averageSpeed",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "drivingTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "date",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "point",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct DRS_DATA_STORE.DrivingData[]",
+				"name": "_dataArray",
+				"type": "tuple[]"
+			}
+		],
+		"name": "AddUserDrivingData",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "GetAllAddress",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "GetAllUserDrivingData",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "braking",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "dangerousBrake",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "dangerousTurn",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "dangerousSpeed",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "averageSpeed",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "drivingTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "date",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "point",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct DRS_DATA_STORE.DrivingData[]",
+						"name": "data",
+						"type": "tuple[]"
+					}
+				],
+				"internalType": "struct DRS_DATA_STORE.ResponseData[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "GetSizeOfAddress",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "GetUserDrivingData",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "braking",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dangerousBrake",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dangerousTurn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dangerousSpeed",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "averageSpeed",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "drivingTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "date",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "point",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct DRS_DATA_STORE.DrivingData[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

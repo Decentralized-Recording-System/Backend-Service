@@ -10,7 +10,8 @@ const { hashPassword } = require('../../utils/helpers/login.service');
 const { generateJwt } = require('../../utils/helpers/generateJwt');
 const { adminProvider } = require('../../utils/helpers/blockchain/initializeAdminProvider');
 const ethers = require('ethers');
-const drsABI = require('../../utils/helpers/blockchain/abi/drsABI.json');
+const DRS_DATA_STORE = require('../../utils/helpers/blockchain/abi/DRS_DATA_STORE.json');
+const { userProvider } = require('../../utils/helpers/blockchain/initializeUserProvider');
 
 // ------------------------------------------------- Register --------------------------------------------------------
 
@@ -165,10 +166,13 @@ exports.Activate = async (req, res) => {
 					status: 400,
 				});
 			// interact blockchain add address
+
 			let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
 			const { walletSigner } = adminProvider();
-			let contract = new ethers.Contract(contractAddress, drsABI, walletSigner);
+			let contract = new ethers.Contract(contractAddress, DRS_DATA_STORE, walletSigner);
 			await contract.addAddress(user.address);
+
+			// save address
 			user.active = true;
 			await user.save();
 			return res.status(200).json({
@@ -391,7 +395,7 @@ exports.TestData = async (req, res) => {
 	try {
 		let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
 		const { walletSigner } = adminProvider();
-		let contract = new ethers.Contract(contractAddress, drsABI, walletSigner);
+		let contract = new ethers.Contract(contractAddress, DRS_DATA_STORE, walletSigner);
 		//---------- test 1 get data 
 		// let currentValue = await contract.getUser();
 		// console.log(currentValue);
@@ -406,6 +410,34 @@ exports.TestData = async (req, res) => {
 		// let currentValue = await contract.getAllAddress();
 		// console.log(currentValue);
 		// console.log(currentValue[0]["dangerous_brake"].toNumber());
+		return res.status(200).send();
+	} catch (error) {
+		console.error('cannot get data ', error);
+		return res.status(500).json({
+			error: true,
+			message: error.message,
+		});
+	}
+};
+
+exports.AddDrivingData = async (req, res) => {
+	try {
+		const { id } = req.decodedData;
+
+		const user = await Users.findOne({ userId: id });
+
+		const { data} = req.body;
+
+		let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+		
+		const { walletSigner } = userProvider(user.markModified);
+
+		let contract = new ethers.Contract(contractAddress, DRS_DATA_STORE, walletSigner);
+
+		const result = await contract.AddUserDrivingData(data);
+
+		console.log("result",result);
+
 		return res.status(200).send();
 	} catch (error) {
 		console.error('cannot get data ', error);
