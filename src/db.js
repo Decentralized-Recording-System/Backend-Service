@@ -5,7 +5,7 @@ mongoose.set('strictQuery', true);
 module.exports = async () => {
   try {
     mongoose
-    .connect(process.env.MONGO_URITEST, {
+    .connect(process.env.MONGO_URI_TEST, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
