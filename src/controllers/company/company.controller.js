@@ -336,7 +336,7 @@ exports.ReActivate = async (req, res) => {
 exports.Logout = async (req, res) => {
 	try {
 		const { id } = req.decodedData;
-		let company = await Company.findOne({ userId: id });
+		let company = await Company.findOne({ companyId: id });
 		company.accessToken = '';
 		await company.save();
 		return res.status(200).send({ success: true, message: 'User Logged out' });
@@ -369,7 +369,7 @@ exports.CheckAccessToken = async (req, res) => {
 exports.GetUserData = async (req, res) => {
 	try {
 		const { id } = req.decodedData;
-		const company = await Company.findOne({ userId: id });
+		const company = await Company.findOne({ companyId: id });
 		return res.status(200).send({
 			success: true,
 			message: 'Get company data success',
@@ -392,7 +392,7 @@ exports.GetAllUserDrivingData = async (req, res) => {
 	try {
 		const { id } = req.decodedData;
 
-		const company = await Company.findOne({ userId: id });
+		const company = await Company.findOne({ companyId: id });
 
 		let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
 

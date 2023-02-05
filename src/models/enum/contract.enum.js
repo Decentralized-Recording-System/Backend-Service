@@ -7,7 +7,6 @@ export const ContractType = {
 
 export const EmailStatus = {
 	NOT_SEND: "notSend",
-	SEND: "send",
 	SENT: "sent",
     TAKE_ISSUE: "takeIssue",
 }

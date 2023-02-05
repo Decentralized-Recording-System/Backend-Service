@@ -1,6 +1,6 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-async function sendEmail(email, code) {
+async function sendEmail (email, code) {
 	try {
 		const smtpEndpoint = 'smtp.gmail.com';
 		const port = 465;
