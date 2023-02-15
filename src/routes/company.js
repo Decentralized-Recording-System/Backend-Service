@@ -4,7 +4,7 @@ const cleanBody = require('../middlewares/cleanbody');
 const AuthController = require('../controllers/company/company.controller');
 const verifyAuth = require('../middlewares/validateToken');
 
-// for auternicatin
+// for authentication
 router.post('/register', cleanBody, AuthController.Register);
 router.post('/login', cleanBody, AuthController.Login);
 router.post('/activate', cleanBody, AuthController.Activate);

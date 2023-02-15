@@ -11,9 +11,12 @@ router.post('/activate', cleanBody, AuthController.Activate);
 router.get('/activate', cleanBody, AuthController.ReActivate);
 router.get('/password', cleanBody, AuthController.ForgotPassword);
 router.patch('/password', cleanBody, AuthController.ResetPassword);
+
 router.get('/logout', verifyAuth, AuthController.Logout);
 router.get('/user', verifyAuth, AuthController.GetUserData);
 router.get('/access', verifyAuth, AuthController.CheckAccessToken);
-router.get('/testdata',cleanBody,AuthController.TestData);
-router.post('/drivingdata',cleanBody,AuthController.AddDrivingData);
+router.get('/test-data',cleanBody,AuthController.TestData);
+router.get('/users',cleanBody,AuthController.GetUsers)
+
+router.post('/driving-data',cleanBody,AuthController.AddDrivingData);
 module.exports = router;

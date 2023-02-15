@@ -389,6 +389,25 @@ exports.GetUserData = async (req, res) => {
 	}
 };
 
+// ------------------------------------------------- get all users --------------------------------------------------------
+
+exports.GetUsers = async (req, res) => {
+	try {
+		const user = await Users.find({});
+		return res.status(200).send({
+			success: true,
+			message: 'Get users data success',
+			data : user.map((item) => ({userId: item.userId,address: item.address}))
+		});
+	} catch (error) {
+		console.error('cannot get data ', error);
+		return res.status(500).json({
+			error: true,
+			message: error.message,
+		});
+	}
+};
+
 // ------------------------------------------------- get user data--------------------------------------------------------
 
 exports.TestData = async (req, res) => {
