@@ -38,7 +38,7 @@ exports.Register = async (req, res) => {
 		const hash = await hashPassword(result.value.password);
 		const id = uuid(); //Generate unique id for the user.
 		result.value.userId = id;
-		//remove the confirmPassword field from the result as we dont need to save this in the db.
+		//remove the confirmPassword field from the result as we don,t need to save this in the db.
 		delete result.value.confirmPassword;
 		result.value.password = hash;
 		let code = Math.floor(100000 + Math.random() * 900000); //Generate random 6 digit code.
@@ -389,15 +389,44 @@ exports.GetUserData = async (req, res) => {
 	}
 };
 
+// ------------------------------------------------- get user trip data--------------------------------------------------------
+
+exports.GetUserTrip = async (req, res) => {
+	try {
+		const { id } = req.decodedData;
+		const user = await Users.findOne({ userId: id });
+		// do get trip
+
+		return res.status(200).send({
+			success: true,
+			message: 'Get user data success',
+			userId: user.userId,
+			Name: user.name,
+			LastName: user.lastName,
+			email: user.email,
+			gender: user.gender,
+			dateOfBirth: user.dateOfBirth,
+			phone: user.phone,
+		});
+		
+	} catch (error) {
+		console.error('cannot get data ', error);
+		return res.status(500).json({
+			error: true,
+			message: error.message,
+		});
+	}
+};
+
 // ------------------------------------------------- get all users --------------------------------------------------------
 
 exports.GetUsers = async (req, res) => {
 	try {
-		const user = await Users.find({});
+		const user = await Users.find({},{userId: 1,address: 1});
 		return res.status(200).send({
 			success: true,
 			message: 'Get users data success',
-			data : user.map((item) => ({userId: item.userId,address: item.address}))
+			data : user
 		});
 	} catch (error) {
 		console.error('cannot get data ', error);
