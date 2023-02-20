@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 const { v4: uuid } = require('uuid');
-const { sendEmail } = require('../../utils/helpers/mailer');
+const { sendEmail } = require('../../utils/helpers/mailer/otp.mailer');
 const { Company } = require('../../models/company/company.model');;
 const ethers = require('ethers');
 const { Contract } = require('../../models/contract/contract.model');

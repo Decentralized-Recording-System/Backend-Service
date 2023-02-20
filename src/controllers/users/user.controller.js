@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 const { v4: uuid } = require('uuid');
-const { sendEmail } = require('../../utils/helpers/mailer');
+const { sendEmail } = require('../../utils/helpers/mailer/otp.mailer');
 const { generateMnemonic } = require('../../utils/helpers/generateMnemonic');
 const { Users } = require('./../../models/users/user.model');
 const { getUserCredential } = require('../../utils/helpers/getUserCredentials');
