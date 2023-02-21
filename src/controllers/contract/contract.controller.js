@@ -3,15 +3,7 @@ require('dotenv').config();
 const { v4: uuid } = require('uuid');
 const { sendEmail } = require('../../utils/helpers/mailer/otp.mailer');
 const { Company } = require('../../models/company/company.model');
-const { getUserCredential } = require('../../utils/helpers/getUserCredentials');
-const { companySchema } = require('../company/models/register.request')
-const { hashPassword } = require('../../utils/helpers/login.service')
-const { generateJwt } = require('../../utils/helpers/generateJwt');
-const ethers = require('ethers');
-const { adminProvider } = require('../../utils/helpers/blockchain/initializeAdminProvider');
-const { userProvider } = require('../../utils/helpers/blockchain/initializeUserProvider');
 const { CreateContractRequest } = require('./models/create-contract.request');
-const { reset } = require('nodemon');
 const { Contract } = require('../../models/contract/contract.model');
 const { Users } = require('../../models/users/user.model');
 const { EmailStatus } = require('../../models/enum/contract.enum');
@@ -98,5 +90,4 @@ exports.SendEmailToUser = async (req, res) => {
 			message: 'Cannot create contract',
 		});
 	}
-
 }
