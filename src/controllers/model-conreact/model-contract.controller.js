@@ -1,95 +1,137 @@
-const bcrypt = require('bcryptjs');
-require('dotenv').config();
-const { v4: uuid } = require('uuid');
-const { sendEmail } = require('../../utils/helpers/mailer/otp.mailer');
-const { Company } = require('../../models/company/company.model');;
-const ethers = require('ethers');
-const { Contract } = require('../../models/contract/contract.model');
-const { Users } = require('../../models/users/user.model');
-const { EmailStatus } = require('../../models/enum/contract.enum');
-const { CreateModelContractRequest } = require('./models/create-model-contract.request');
+require("dotenv").config();
+const { v4: uuid } = require("uuid");
+const { Company } = require("../../models/company/company.model");
+const { Contract } = require("../../models/contract/contract.model");
+const {
+  CreateModelContractRequest,
+} = require("./models/create-model-contract.request");
+const { ModelContract } = require("../../models/model-contract/model-contract");
+const {
+  getModelContractById,
+  GetModelContractByCompanyRequest,
+} = require("./models");
+const { getContractByCompany } = require("../contract/contract.controller");
 
 //----------------------------------------------------//
 
-exports.CreateContract = async (req, res) => {
-	try {
-		const { id } = req.decodedData;
-		const company = await Company.findOne({ companyId: id });
+exports.CreateModelContract = async (req, res) => {
+  try {
+    const { id } = req.decodedData;
+    const company = await Company.findOne({ companyId: id });
 
-		const result = CreateModelContractRequest.validate(req.body);
+    const result = CreateModelContractRequest.validate(req.body);
 
-		if (result.error) {
-			return res.status(400).json({
-				error: true,
-				status: 400,
-				message: result.error.message,
-			});
-		}
+    if (result.error) {
+      return res.status(400).json({
+        error: true,
+        status: 400,
+        message: result.error.message,
+      });
+    }
 
-		const modelContractId = uuid();
-		result.value.modelContractId = modelContractId;
-		result.value.companyId = company.companyId;
+    const modelContractId = uuid();
+    result.value.modelContractId = modelContractId;
+    result.value.companyId = company.companyId;
 
-		const newModelContract = new Contract(result.value);
-		await newModelContract.save();
+    const newModelContract = new Contract(result.value);
+    await newModelContract.save();
 
-		return res.status(200).json({
-			success: true,
-			message: 'Create model contract success',
-		});
-	} catch (error) {
-		console.error('Create model contract error', error);
-		return res.status(500).json({
-			error: true,
-			message: 'Cannot model create contract error ',
-		});
-	}
-}
+    return res.status(200).json({
+      success: true,
+      message: "Create model contract success",
+    });
+  } catch (error) {
+    console.error("Create model contract error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot model create contract error ",
+    });
+  }
+};
 
-//----------------------------------------------------//
+exports.GetCompanies = async (req, res) => {
+  try {
+    const companies = await Company.find(
+      { banStatus: false },
+      { companyName: 1, companyId: 1 }
+    );
 
-exports.SendEmailToUser = async (req, res) => {
-	try {
-		const { id } = req.decodedData;
-		const { contractId } = req.body;
+    return res.status(200).json({
+      success: true,
+      data: companies,
+      message: "get companies success",
+    });
+  } catch (error) {
+    console.error("get companies error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot get companies error ",
+    });
+  }
+};
 
-		const contract = await Contract.findOne({ contractId: contractId })
+exports.GetModelContractByCompany = async (req, res) => {
+  try {
+    const result = GetModelContractByCompanyRequest.validate(req.body);
+    const company = await Company.findOne({
+      companyId: result.value.companyId,
+    });
 
-		const user = await Users.findOne({ userId: contract.userId })
+    if (company.banStatus) {
+      return res.status(400).json({
+        error: true,
+        message: "Cannot get data,company had ban",
+      });
+    }
 
-		if (contract.companyId === id) {
-			if (contract.emailStatus === EmailStatus.SENT) {
-				return res.status(500).json({
-					error: true,
-					message: "Couldn't send email ,Email has been sent",
-				});
-			}
-			const sendCode = await sendEmail(user.email, contract.contractData);
-			if (sendCode.error) {
-				return res.status(500).json({
-					error: true,
-					message: "Couldn't send verification email.",
-				});
-			}
-			contract.emailStatus = EmailStatus.SENT;
-			await contract.save();
-			return res.status(200).json({
-				success: true,
-				message: 'Sent email Success',
-			});
-		}
-		return res.status(400).json({
-			error: true,
-			status: 400,
-			message: 'Please make a valid request',
-		});
+    const Models = await ModelContract.find(
+      { company },
+      { modelContractName: 1 }
+    );
 
-	} catch (error) {
-		console.error('Create-contract-error', error);
-		return res.status(500).json({
-			error: true,
-			message: 'Cannot create contract',
-		});
-	}
+    return res.status(200).json({
+      success: true,
+      data: Models,
+      message: "get model contract success",
+    });
+  } catch (error) {
+    console.error("get model contract error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot get model  contract error ",
+    });
+  }
+};
 
-}
+exports.GetModelContractById = async (req, res) => {
+  try {
+    const result = getModelContractById.validate(req.body);
+    const company = await Company.findOne({
+      companyId: result.value.companyId,
+    });
+
+    if (company.banStatus) {
+      return res.status(400).json({
+        error: true,
+        message: "Cannot get data,you had ban",
+      });
+    }
+
+    const Models = await ModelContract.findOne({
+      companyId: result.value.companyId,
+      modelContractId: result.value.modelContractId,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: Models,
+      message: "get model contract success",
+    });
+  } catch (error) {
+    console.error("get model contract error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot get model  contract error ",
+    });
+  }
+};
