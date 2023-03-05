@@ -5,7 +5,7 @@ const { sendEmail } = require("../../utils/helpers/mailer/otp.mailer");
 const { generateMnemonic } = require("../../utils/helpers/generateMnemonic");
 const { Users } = require("./../../models/users/user.model");
 const { getUserCredential } = require("../../utils/helpers/getUserCredentials");
-const { userSchema } = require("../users/models/register.request");
+const { userSchema } = require("../users/dto/register.request");
 const { hashPassword } = require("../../utils/helpers/login.service");
 const { generateJwt } = require("../../utils/helpers/generateJwt");
 const {
