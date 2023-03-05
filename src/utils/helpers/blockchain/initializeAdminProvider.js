@@ -2,7 +2,7 @@ const ethers = require('ethers');
 require("dotenv").config();
 
 const url = process.env.RPC_ENDPOINT;
-const mnemonic = process.env.MNEMONIC;
+const mnemonic = process.env.MNEMONIC_ADMIN;
 const adminProvider = () => {
     try {
         const wallet = ethers.Wallet.fromMnemonic(mnemonic);

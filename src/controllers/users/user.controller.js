@@ -178,7 +178,7 @@ exports.Activate = async (req, res) => {
         DRS_DATA_STORE,
         walletSigner
       );
-      await contract.addAddress(user.address);
+      await contract.AddUserAddress(user.address);
 
       // save address
       user.active = true;
@@ -376,45 +376,33 @@ exports.CheckAccessToken = async (req, res) => {
 exports.GetUserData = async (req, res) => {
   try {
     const { id } = req.decodedData;
-    const user = await Users.findOne({ userId: id });
+    const user = await Users.findOne(
+      {
+        userId: id,
+      },
+      {
+        address: 1,
+        carBodyType: 1,
+        carChassisNo: 1,
+        carDisplacement: 1,
+        carGVM: 1,
+        email: 1,
+        carLicenseNo: 1,
+        carModel: 1,
+        carModelYr: 1,
+        carNoOfSeats: 1,
+        dateOfBirth: 1,
+        gender: 1,
+        name: 1,
+        lastName: 1,
+        phone: 1,
+        _id: 0,
+      }
+    );
     return res.status(200).json({
       success: true,
       message: "Get user data success",
-      userId: user.userId,
-      Name: user.name,
-      LastName: user.lastName,
-      email: user.email,
-      gender: user.gender,
-      dateOfBirth: user.dateOfBirth,
-      phone: user.phone,
-    });
-  } catch (error) {
-    console.error("cannot get data ", error);
-    return res.status(500).json({
-      error: true,
-      message: error.message,
-    });
-  }
-};
-
-// ------------------------------------------------- get user trip data--------------------------------------------------------
-
-exports.GetUserTrip = async (req, res) => {
-  try {
-    const { id } = req.decodedData;
-    const user = await Users.findOne({ userId: id });
-    // do get trip
-
-    return res.status(200).json({
-      success: true,
-      message: "Get user data success",
-      userId: user.userId,
-      Name: user.name,
-      LastName: user.lastName,
-      email: user.email,
-      gender: user.gender,
-      dateOfBirth: user.dateOfBirth,
-      phone: user.phone,
+      data: user,
     });
   } catch (error) {
     console.error("cannot get data ", error);
@@ -446,50 +434,16 @@ exports.GetUsers = async (req, res) => {
 
 // ------------------------------------------------- get user data--------------------------------------------------------
 
-exports.TestData = async (req, res) => {
-  try {
-    let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
-    const { walletSigner } = adminProvider();
-    let contract = new ethers.Contract(
-      contractAddress,
-      DRS_DATA_STORE,
-      walletSigner
-    );
-    //---------- test 1 get data
-    // let currentValue = await contract.getUser();
-    // console.log(currentValue);
-    // console.log(currentValue[0]["dangerous_brake"].toNumber());
-    //---------- test 2 add address
-    await contract.addAddress("0xb75c279D967Ad2cFFc2E10C0Fab34940b13c471f");
-
-    // walletSigner.getAddress().then((result) => {
-    // 	console.log("Current block number: " + result);
-    // });
-    //---------- test 23 get all address
-    // let currentValue = await contract.getAllAddress();
-    // console.log(currentValue);
-    // console.log(currentValue[0]["dangerous_brake"].toNumber());
-    return res.status(200).json();
-  } catch (error) {
-    console.error("cannot get data ", error);
-    return res.status(500).json({
-      error: true,
-      message: error.message,
-    });
-  }
-};
-
 exports.AddDrivingData = async (req, res) => {
   try {
     const { id } = req.decodedData;
-
     const user = await Users.findOne({ userId: id });
 
     const { data } = req.body;
 
     let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
 
-    const { walletSigner } = userProvider(user.address);
+    const { walletSigner } = userProvider(user.mnemonic);
 
     let contract = new ethers.Contract(
       contractAddress,
@@ -499,9 +453,45 @@ exports.AddDrivingData = async (req, res) => {
 
     const result = await contract.AddUserDrivingData(data);
 
-    console.log("result", result);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("cannot get data ", error);
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
 
-    return res.status(200).json();
+exports.GetDrivingData = async (req, res) => {
+  try {
+    const { id } = req.decodedData;
+    const user = await Users.findOne({ userId: id });
+
+    let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+
+    const { walletSigner } = userProvider(user.mnemonic);
+
+    let contract = new ethers.Contract(
+      contractAddress,
+      DRS_DATA_STORE,
+      walletSigner
+    );
+
+    const result = await contract.GetUserDrivingData();
+
+    const response = result.map((item) => ({
+      braking: parseInt(item.braking._hex),
+      dangerousBrake: parseInt(item.dangerousBrake._hex),
+      dangerousTurn: parseInt(item.dangerousTurn._hex),
+      dangerousSpeed: parseInt(item.dangerousSpeed._hex),
+      averageSpeed: item.averageSpeed,
+      drivingTime: parseInt(item.drivingTime._hex),
+      date: item.date,
+      score: parseInt(item.score._hex),
+    }));
+
+    return res.status(200).json(response);
   } catch (error) {
     console.error("cannot get data ", error);
     return res.status(500).json({

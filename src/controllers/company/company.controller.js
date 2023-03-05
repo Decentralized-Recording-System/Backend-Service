@@ -182,6 +182,7 @@ exports.Activate = async (req, res) => {
         DRS_DATA_STORE,
         walletSigner
       );
+      
       await contract.addAddress(company.address);
 
       //save
@@ -399,7 +400,7 @@ exports.GetUserData = async (req, res) => {
 
 // ------------------------------------------------- get all user data--------------------------------------------------------
 
-exports.GetAllUserDrivingData = async (req, res) => {
+exports.GetUsersDrivingData = async (req, res) => {
   try {
     const { id } = req.decodedData;
 
@@ -415,11 +416,57 @@ exports.GetAllUserDrivingData = async (req, res) => {
       walletSigner
     );
 
-    const result = await contract.GetAllUserDrivingData();
+    const result = await contract.getUsers();
 
-    console.log("result", result);
+    const response = result.map((item) => ({
+      address: item.user,
+      updateCount: parseInt(item.updateCount._hex),
+      lastScore: parseInt(item.lastScore._hex),
+      lastDate: item.lastUpdate,
+    }));
 
-    return res.status(200).json();
+    return res.status(200).send(response);
+  } catch (error) {
+    console.error("cannot get data ", error);
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+exports.GetDrivingData = async (req, res) => {
+  try {
+    const { address } = req.body;
+
+    const { id } = req.decodedData;
+
+    const company = await Company.findOne({ companyId: id });
+
+    let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+
+    const { walletSigner } = userProvider(company.mnemonic);
+
+    let contract = new ethers.Contract(
+      contractAddress,
+      DRS_DATA_STORE,
+      walletSigner
+    );
+
+    const result = await contract.AdminGetUserDrivingData(address);
+
+    const response = result.map((item) => ({
+      braking: parseInt(item.braking._hex),
+      dangerousBrake: parseInt(item.dangerousBrake._hex),
+      dangerousTurn: parseInt(item.dangerousTurn._hex),
+      dangerousSpeed: parseInt(item.dangerousSpeed._hex),
+      averageSpeed: item.averageSpeed,
+      drivingTime: parseInt(item.drivingTime._hex),
+      date: item.date,
+      score: parseInt(item.score._hex),
+    }));
+
+    return res.status(200).json(response);
   } catch (error) {
     console.error("cannot get data ", error);
     return res.status(500).json({

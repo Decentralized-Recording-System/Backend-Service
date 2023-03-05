@@ -13,10 +13,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/users", userRouter);
 app.use("/company", companyRouter);
-// for feature
-app.use("/model-contract");
-app.use("/contract");
-// for feature
 app.get("/ping", (req, res) => {
   return res.send({
     error: false,

@@ -1,18 +1,18 @@
 const express = require('express');
-const companyRouter = express.Router();
+const router = express.Router();
 const cleanBody = require('../middlewares/cleanbody');
 const AuthController = require('../controllers/company/company.controller');
 const verifyAuth = require('../middlewares/validateToken');
 
 // for authentication
-companyRouter.post('/register', cleanBody, AuthController.Register);
-companyRouter.post('/login', cleanBody, AuthController.Login);
-companyRouter.post('/activate', cleanBody, AuthController.Activate);
-companyRouter.get('/activate', cleanBody, AuthController.ReActivate);
-companyRouter.get('/password', cleanBody, AuthController.ForgotPassword);
-companyRouter.patch('/password', cleanBody, AuthController.ResetPassword);
-companyRouter.get('/logout', verifyAuth, AuthController.Logout);
-companyRouter.get('/access', verifyAuth, AuthController.CheckAccessToken);
-companyRouter.get('/drivingdata',verifyAuth,AuthController.GetAllUserDrivingData)
+router.post('/register', cleanBody, AuthController.Register);
+router.post('/login', cleanBody, AuthController.Login);
+router.post('/activate', cleanBody, AuthController.Activate);
+router.get('/activate', cleanBody, AuthController.ReActivate);
+router.get('/password', cleanBody, AuthController.ForgotPassword);
+router.patch('/password', cleanBody, AuthController.ResetPassword);
+router.get('/logout', verifyAuth, AuthController.Logout);
+router.get('/access', verifyAuth, AuthController.CheckAccessToken);
+router.get('/users',verifyAuth,AuthController.GetUsersDrivingData)
 
-module.exports = { companyRouter};
+module.exports =  router;

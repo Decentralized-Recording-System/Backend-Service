@@ -1,3 +1,8 @@
-export * from './users'
+const userRouter = require('./users');
+const companyRouter = require('./company');
 
-export * from './company'
+
+module.exports = {
+  userRouter,
+  companyRouter,
+};

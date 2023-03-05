@@ -1,23 +1,21 @@
 const express = require('express');
-const userRouter = express.Router();
+const router = express.Router();
 const cleanBody = require('../middlewares/cleanbody');
 const AuthController = require('../controllers/users/user.controller');
 const verifyAuth = require('../middlewares/validateToken');
 
 // for auternicatin
-userRouter.post('/register', cleanBody, AuthController.Register);
-userRouter.post('/login', cleanBody, AuthController.Login);
-userRouter.post('/activate', cleanBody, AuthController.Activate);
-userRouter.get('/activate', cleanBody, AuthController.ReActivate);
-userRouter.get('/password', cleanBody, AuthController.ForgotPassword);
-userRouter.patch('/password', cleanBody, AuthController.ResetPassword);
+router.post('/register', cleanBody, AuthController.Register);
+router.post('/login', cleanBody, AuthController.Login);
+router.post('/activate', cleanBody, AuthController.Activate);
+router.get('/activate', cleanBody, AuthController.ReActivate);
+router.get('/password', cleanBody, AuthController.ForgotPassword);
+router.patch('/password', cleanBody, AuthController.ResetPassword);
 
-userRouter.get('/logout', verifyAuth, AuthController.Logout);
-userRouter.get('/user', verifyAuth, AuthController.GetUserData);
-userRouter.get('/access', verifyAuth, AuthController.CheckAccessToken);
-userRouter.get('/test-data',cleanBody,AuthController.TestData);
-userRouter.get('/users',cleanBody,AuthController.GetUsers)
+router.get('/logout', verifyAuth, AuthController.Logout);
+router.get('/user', verifyAuth, AuthController.GetUserData);
+router.get('/access', verifyAuth, AuthController.CheckAccessToken);
+router.get('/driving-data',verifyAuth,AuthController.GetDrivingData);
+router.post('/driving-data',verifyAuth,AuthController.AddDrivingData);
 
-userRouter.post('/driving-data',cleanBody,AuthController.AddDrivingData);
-
-module.exports = {userRouter};
+module.exports = router;
