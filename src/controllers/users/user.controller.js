@@ -344,6 +344,14 @@ exports.Logout = async (req, res) => {
   try {
     const { id } = req.decodedData;
     let user = await Users.findOne({ userId: id });
+
+    if (!user) {
+      return res.status(400).json({
+        error: true,
+        message: "user not found",
+      });
+    }
+
     user.accessToken = "";
     await user.save();
     return res.status(200).json({ success: true, message: "User Logged out" });
@@ -399,6 +407,14 @@ exports.GetUserData = async (req, res) => {
         _id: 0,
       }
     );
+
+    if (!user) {
+      return res.status(400).json({
+        error: true,
+        message: "user not found",
+      });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Get user data success",
@@ -418,6 +434,14 @@ exports.GetUserData = async (req, res) => {
 exports.GetUsers = async (req, res) => {
   try {
     const user = await Users.find({}, { userId: 1, address: 1 });
+
+    if (!user) {
+      return res.status(400).json({
+        error: true,
+        message: "user not found",
+      });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Get users data success",
@@ -438,6 +462,13 @@ exports.AddDrivingData = async (req, res) => {
   try {
     const { id } = req.decodedData;
     const user = await Users.findOne({ userId: id });
+
+    if (!user) {
+      return res.status(400).json({
+        error: true,
+        message: "user not found",
+      });
+    }
 
     const { data } = req.body;
 
@@ -467,6 +498,13 @@ exports.GetDrivingData = async (req, res) => {
   try {
     const { id } = req.decodedData;
     const user = await Users.findOne({ userId: id });
+
+    if (!user) {
+      return res.status(400).json({
+        error: true,
+        message: "user not found",
+      });
+    }
 
     let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
 

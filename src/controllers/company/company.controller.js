@@ -182,8 +182,8 @@ exports.Activate = async (req, res) => {
         DRS_DATA_STORE,
         walletSigner
       );
-      
-      await contract.addAddress(company.address);
+
+      await contract.AddCompanyAddress(company.address);
 
       //save
       company.active = true;
@@ -349,6 +349,14 @@ exports.Logout = async (req, res) => {
   try {
     const { id } = req.decodedData;
     let company = await Company.findOne({ companyId: id });
+
+    if (!company) {
+      return res.status(400).json({
+        error: true,
+        message: "Email not found",
+      });
+    }
+
     company.accessToken = "";
     await company.save();
     return res.status(200).json({ success: true, message: "User Logged out" });
@@ -381,13 +389,22 @@ exports.CheckAccessToken = async (req, res) => {
 exports.GetUserData = async (req, res) => {
   try {
     const { id } = req.decodedData;
-    const company = await Company.findOne({ companyId: id });
+    const company = await Company.findOne(
+      { companyId: id },
+      { userId: 1, Name: 1, email: 1 }
+    );
+
+    if (!company) {
+      return res.status(400).json({
+        error: true,
+        message: "Email not found",
+      });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Get company data success",
-      userId: company.companyId,
-      Name: company.companyName,
-      email: company.email,
+      data: company,
     });
   } catch (error) {
     console.error("cannot get data ", error);
@@ -405,6 +422,13 @@ exports.GetUsersDrivingData = async (req, res) => {
     const { id } = req.decodedData;
 
     const company = await Company.findOne({ companyId: id });
+
+    if (!company) {
+      return res.status(400).json({
+        error: true,
+        message: "not found company",
+      });
+    }
 
     let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
 
@@ -435,13 +459,20 @@ exports.GetUsersDrivingData = async (req, res) => {
   }
 };
 
-exports.GetDrivingData = async (req, res) => {
+exports.GetUserDrivingData = async (req, res) => {
   try {
-    const { address } = req.body;
+    const address = req.params.id;
 
     const { id } = req.decodedData;
 
     const company = await Company.findOne({ companyId: id });
+
+    if (!company) {
+      return res.status(400).json({
+        error: true,
+        message: "Email not found",
+      });
+    }
 
     let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
 
