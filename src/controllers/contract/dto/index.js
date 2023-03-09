@@ -1,7 +1,11 @@
-export * from "./send-email-to-user.request";
+const { CreateContractRequest } = require("./create-contract.request");
+const { GetContractById } = require("./get-contract-by-id.request");
+const { SendEmailToUserRequest } = require("./send-email-to-user.request");
+const { signContractRequest } = require("./sign-contract.request");
 
-export * from "./create-contract.request";
-
-export * from "./sign-contract.request";
-
-export * from "./get-contract-by-id.request";
+module.exports = {
+  CreateContractRequest,
+  GetContractById,
+  SendEmailToUserRequest,
+  signContractRequest,
+};
