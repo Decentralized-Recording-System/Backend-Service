@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const { userRouter, companyRouter } = require("./routes");
+const { userRouter, companyRouter, modelContractRouter } = require("./routes");
 
 require("dotenv").config();
 require("./db")();
@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/users", userRouter);
 app.use("/company", companyRouter);
+app.use("/model-contract", modelContractRouter);
 app.get("/ping", (req, res) => {
   return res.send({
     error: false,

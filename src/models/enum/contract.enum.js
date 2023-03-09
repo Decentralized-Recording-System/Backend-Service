@@ -1,18 +1,20 @@
-export const ContractType = {
+ const ContractType = {
 	COMPREHENSIVE : "comprehensive",
 	THIRD_PARTY : "thirdParty",
 	STANDALONE : "standalone",
 	ANOTHER : "another"
 }
 
-export const EmailStatus = {
+ const EmailStatus = {
 	NOT_SEND: "notSend",
 	SENT: "sent",
     TAKE_ISSUE: "takeIssue",
 }
 
-export const ContractStatus = {
+ const ContractStatus = {
 	ACTIVE: "active",
 	PENDING: "pending",
 	EXPIRE: "expire",
 }
+
+module.exports = {ContractStatus,EmailStatus,ContractType}

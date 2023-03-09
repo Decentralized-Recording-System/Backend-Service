@@ -1,8 +1,8 @@
 const Joi = require("joi");
 
-const getModelContractById = Joi.object().keys({
+const getModelContractByIdRequest = Joi.object().keys({
   modelContractId: Joi.string().required(),
   companyId: Joi.string().required(),
 });
 
-module.exports = { getModelContractById };
+module.exports = { getModelContractByIdRequest };

@@ -2,15 +2,9 @@ require("dotenv").config();
 const { v4: uuid } = require("uuid");
 const { Company } = require("../../models/company/company.model");
 const { Contract } = require("../../models/contract/contract.model");
-const {
-  CreateModelContractRequest,
-} = require("./models/create-model-contract.request");
 const { ModelContract } = require("../../models/model-contract/model-contract");
-const {
-  getModelContractById,
-  GetModelContractByCompanyRequest,
-} = require("./models");
-const { getContractByCompany } = require("../contract/contract.controller");
+const { CreateModelContractRequest, GetModelContractByCompanyRequest, getModelContractByIdRequest } = require("./dto");
+
 
 //----------------------------------------------------//
 
@@ -18,6 +12,13 @@ exports.CreateModelContract = async (req, res) => {
   try {
     const { id } = req.decodedData;
     const company = await Company.findOne({ companyId: id });
+    if (!company) {
+      return res.status(400).json({
+        error: true,
+        status: 400,
+        message: 'company not found',
+      });
+    }
 
     const result = CreateModelContractRequest.validate(req.body);
 
@@ -61,6 +62,7 @@ exports.GetCompanies = async (req, res) => {
       data: companies,
       message: "get companies success",
     });
+
   } catch (error) {
     console.error("get companies error", error);
     return res.status(500).json({
@@ -105,7 +107,7 @@ exports.GetModelContractByCompany = async (req, res) => {
 
 exports.GetModelContractById = async (req, res) => {
   try {
-    const result = getModelContractById.validate(req.body);
+    const result = getModelContractByIdRequest.validate(req.body);
     const company = await Company.findOne({
       companyId: result.value.companyId,
     });

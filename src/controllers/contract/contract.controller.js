@@ -15,7 +15,7 @@ const {
   SendEmailToUserRequest,
   signContractRequest,
   GetContractById,
-} = require("./models");
+} = require("./dto");
 //----------------------------------------------------//
 
 exports.CreateContract = async (req, res) => {
