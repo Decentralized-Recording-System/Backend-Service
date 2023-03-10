@@ -18,7 +18,7 @@ app.use("/model-contract", modelContractRouter);
 app.use("/contract", contractRouter);
 
 app.get("/ping", (req, res) => {
-  return res.send({
+  return res.json({
     error: false,
     message: "Server is healthy",
   });

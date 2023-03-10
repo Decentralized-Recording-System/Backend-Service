@@ -449,7 +449,7 @@ exports.GetUsersDrivingData = async (req, res) => {
       lastDate: item.lastUpdate,
     }));
 
-    return res.status(200).send(response);
+    return res.status(200).json(response);
   } catch (error) {
     console.error("cannot get data ", error);
     return res.status(500).json({
