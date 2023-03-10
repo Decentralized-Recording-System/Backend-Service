@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { v4: uuid } = require("uuid");
+
 const { Company } = require("../../models/company/company.model");
 const { Contract } = require("../../models/contract/contract.model");
 const { Users } = require("../../models/users/user.model");
@@ -15,43 +15,9 @@ const {
   SendEmailToUserRequest,
   signContractRequest,
   GetContractById,
+  AssentContractRequest,
 } = require("./dto");
 //----------------------------------------------------//
-
-exports.CreateContract = async (req, res) => {
-  try {
-    const { id } = req.decodedData;
-    const company = await Company.findOne({ companyId: id });
-
-    const result = CreateContractRequest.validate(req.body);
-
-    if (result.error) {
-      return res.status(400).json({
-        error: true,
-        status: 400,
-        message: result.error.message,
-      });
-    }
-
-    const contractId = uuid();
-    result.value.contractId = contractId;
-    result.value.companyId = company.companyId;
-
-    const newContract = new Contract(result.value);
-    await newContract.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Create contract success",
-    });
-  } catch (error) {
-    console.error("Create-contract-error", error);
-    return res.status(500).json({
-      error: true,
-      message: "Cannot create contract",
-    });
-  }
-};
 
 //----------------------------------------------------//
 
@@ -213,6 +179,34 @@ exports.getContractById = async (req, res) => {
     return res.status(500).json({
       error: true,
       message: "Cannot get contract ",
+    });
+  }
+};
+
+//----------------------------------------------------//
+
+exports.TestSendEmailToUser = async (req, res) => {
+  try {
+    const sendCodeStatus = await sendCreateContractEmail(
+      "in.spaymax@gmail.com",
+      "test contract.contractData"
+    );
+
+    if (sendCodeStatus.error) {
+      return res.status(500).json({
+        error: true,
+        message: "Couldn't send contract data  email.",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Sent email Success",
+    });
+  } catch (error) {
+    console.error("Sent email error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot sent email",
     });
   }
 };

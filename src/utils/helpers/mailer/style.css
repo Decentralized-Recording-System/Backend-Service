@@ -1,0 +1,36 @@
+h1 {
+	font-size: 36px;
+	color: #333;
+	margin-bottom: 20px;
+}
+
+label {
+	display: block;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+
+input[type="text"], textarea {
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	width: 100%;
+	max-width: 500px;
+	margin-bottom: 20px;
+	font-size: 16px;
+}
+
+input[type="submit"], input[type="button"] {
+	padding: 10px;
+	border: none;
+	border-radius: 3px;
+	background-color: #4CAF50;
+	color: #fff;
+	cursor: pointer;
+	font-size: 16px;
+	margin-right: 10px;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover {
+	background-color: #333;
+}

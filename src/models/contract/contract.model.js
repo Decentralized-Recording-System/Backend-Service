@@ -12,6 +12,7 @@ const contractSchema = new Schema(
 		contractType: { type: String,enum:ContractType},
 		contractData: { type: String },
 		status: { type: String, enum: ContractStatus, required: true, default: ContractStatus.PENDING },
+		userStatus: { type: String, enum: ContractStatus, required: true, default: ContractStatus.PENDING },
 		emailStatus: { type: String, enum: EmailStatus, required: true, default: EmailStatus.NOT_SEND },
 	},
 	{

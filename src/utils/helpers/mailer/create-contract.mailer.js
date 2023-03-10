@@ -4,32 +4,29 @@ const nodemailer = require("nodemailer");
 const sendCreateContractEmail = async (email, Data) => {
   const body_html = `
     <!DOCTYPE html>
-    <html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Car Insurance Contract</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+      </head>
       <body>
-        <h1>Insurance Smart Contract</h1>
-        <p id="Descriptions">Descriptions : นี่คือสัญญาประกันภัยรถยนต์แบบ Smart Contract หากท่านยินยอมในข้อตกลงที่สามารถกดยินยอมในปุ่ม Accept หากไม่ยินยอมให้กดปุ่ม Refuse </p>
-        <p id="Data">Data : ${Data} </p>
-        <p id="Result"></p>
-        <button type="button" onclick="Accept()" style="background-color:DodgerBlue">Accept</button>
-        <button type="button" onclick="Refuse()" style="background-color:Tomato">Refuse</button>
-
-        <script>
-        const Accept = () => {
-          document.getElementById("Result").style.fontSize = "16px"; 
-          document.getElementById("Result").innerText  = "Accept success";
-          document.getElementById("Result").style.color = "white";
-          document.getElementById("Result").style.backgroundColor = "MediumSeaGreen";        
-        }
-        const Refuse = () =>{
-          document.getElementById("Result").style.fontSize = "16px"; 
-          document.getElementById("Result").innerText  = "Refuse success ";
-          document.getElementById("Result").style.color = "white";
-          document.getElementById("Result").style.backgroundColor = "Tomato";        
-        }
-        </script>
-
+        <h1>Car Insurance Contract</h1>
+        <form method="post" action="http://localhost:3000/submit">
+          <label for="name">Name:</label>
+          <input type="text" name="name" required>
+          <br>
+          <label for="description">Description:</label>
+          <textarea name="description" required></textarea>
+          <br>
+          <label for="info">Contract Information:</label>
+          <textarea name="info" required></textarea>
+          <br>
+          <input type="submit" value="Submit">
+          <input type="button" value="Cancel" onclick="location.href='http://localhost:3000/cancel';">
+        </form>
       </body>
-    </html>
+      </html>
     `;
 
   try {

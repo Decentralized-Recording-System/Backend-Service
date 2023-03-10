@@ -1,21 +1,23 @@
 const express = require("express");
 const router = express.Router();
-const ContractController = require("../controllers/contract/contract.controller");
+const CompanyContractController = require("../controllers/contract/company-contract.controller");
+const UserContractController = require("../controllers/contract/user-contract.controller");
+
 const verifyAuth = require("../middle-wares/validateToken");
 const cleanBody = require("../middle-wares/clean-body");
 
-// for ModelContractController
-router.get("/:id", cleanBody, ContractController.getContractById);
-router.get(
-  "/companies/:id",
-  verifyAuth,
-  ContractController.getContractByCompany
-);
+router.post("/user/create", verifyAuth, UserContractController.CreateContract);
 
-router.post("/create", verifyAuth, ContractController.CreateContract);
+router.post("/user/assent", verifyAuth, UserContractController.AssentContract);
 
-router.post("/email", verifyAuth, ContractController.SendEmailToUser);
+router.post("/user/un-assent", verifyAuth, UserContractController.UnAssentContract);
 
-router.post("/:id", verifyAuth, ContractController.signContract);
+router.get("/company/:id",verifyAuth,CompanyContractController.getContractByCompany);
+
+router.post("/company/:id", verifyAuth, CompanyContractController.signContract);
+
+router.post("/company/email", verifyAuth, CompanyContractController.SendEmailToUser);
+
+router.get("/:id", verifyAuth, CompanyContractController.getContractById);
 
 module.exports = router;

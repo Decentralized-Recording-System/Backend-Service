@@ -12,9 +12,10 @@
 }
 
  const ContractStatus = {
-	ACTIVE: "active",
-	PENDING: "pending",
-	EXPIRE: "expire",
-}
+   ACTIVE: "active",
+   PENDING: "pending",
+   EXPIRE: "expire",
+   UN_ASSENT: "ASSENT"
+ };
 
 module.exports = {ContractStatus,EmailStatus,ContractType}
