@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const contractSchema = new Schema(
 	{
 		contractId: { type: String, required: true, unique: true },
+		promotionCodeId: { type: String, required: false ,default: null},
 		companyId: { type: String, required: true },
 		userId: { type: String, required: true },
 		carId: { type: String },

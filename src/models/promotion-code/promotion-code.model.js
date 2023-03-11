@@ -9,7 +9,7 @@ const promotionCode = new Schema(
     discount: { type: Number, required: true },
     description: { type: String, required: false },
     quantity: { type: Number, required: true },
-    used: { type: Number, required: true },
+    used: { type: Number, required: false ,default: 0},
     start: { type: Date, required: true },
     expires: { type: Date, required: true },
   },
