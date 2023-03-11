@@ -24,7 +24,15 @@ exports.CreateContract = async (req, res) => {
   try {
     const { id } = req.decodedData;
 
-    const company = await Company.findOne({ companyId: id });
+    const user = await Users.findOne({ userId: id });
+
+    if(!user){
+      return res.status(400).json({
+        error: true,
+        status: 400,
+        message: 'not found user',
+      });
+    }
 
     const result = CreateContractRequest.validate(req.body);
 
@@ -38,7 +46,7 @@ exports.CreateContract = async (req, res) => {
 
     const contractId = uuid();
     result.value.contractId = contractId;
-    result.value.companyId = company.companyId;
+    result.value.userId = id;
 
     const newContract = new Contract(result.value);
     await newContract.save();
