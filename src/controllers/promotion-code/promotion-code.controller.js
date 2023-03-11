@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { v4: uuid } = require("uuid");
+const shortid = require('shortid');
 const { Company } = require("../../models/company/company.model");
 const {
   CreatePromotionCodeRequest,
@@ -7,7 +7,6 @@ const {
 const {
   PromotionCode,
 } = require("../../models/promotion-code/promotion-code.model");
-const { Contract } = require("../../models/contract/contract.model");
 //----------------------------------------------------//
 
 exports.CreatePromotionCode = async (req, res) => {
@@ -26,7 +25,7 @@ exports.CreatePromotionCode = async (req, res) => {
       });
     }
 
-    const promotionCodeId = uuid();
+    const promotionCodeId = shortid.generate();
     result.value.promotionCodeId = promotionCodeId;
     result.value.companyId = company.companyId;
 

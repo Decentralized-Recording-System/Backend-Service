@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const { userRouter, companyRouter, modelContractRouter, contractRouter } = require("./routes");
+const { userRouter, companyRouter, modelContractRouter, contractRouter ,promotionCode} = require("./routes");
 
 require("dotenv").config();
 require("./db")();
@@ -16,6 +16,7 @@ app.use("/users", userRouter);
 app.use("/company", companyRouter);
 app.use("/model-contract", modelContractRouter);
 app.use("/contract", contractRouter);
+app.use("/promotion-code", promotionCode);
 
 app.get("/ping", (req, res) => {
   return res.json({
