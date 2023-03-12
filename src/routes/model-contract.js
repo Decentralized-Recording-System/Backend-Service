@@ -10,8 +10,8 @@ router.post("/company/create", verifyAuth, ModelContractController.CreateModelCo
 
 router.get("/company", cleanBody, ModelContractController.GetCompanies);
 
-router.get("/company/:id",verifyAuth,ModelContractController.GetModelContractByCompany);
+router.get("/company/:id",cleanBody,ModelContractController.GetModelContractByCompany);
 
-router.get("/:id", verifyAuth, ModelContractController.GetModelContractById);
+router.get("/:id", cleanBody, ModelContractController.GetModelContractById);
 
 module.exports = router;

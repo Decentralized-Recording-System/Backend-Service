@@ -3,8 +3,11 @@ const { v4: uuid } = require("uuid");
 const { Company } = require("../../models/company/company.model");
 const { Contract } = require("../../models/contract/contract.model");
 const { ModelContract } = require("../../models/model-contract/model-contract");
-const { CreateModelContractRequest, GetModelContractByCompanyRequest, getModelContractByIdRequest } = require("./dto");
-
+const {
+  CreateModelContractRequest,
+  GetModelContractByCompanyRequest,
+  getModelContractByIdRequest,
+} = require("./dto");
 
 //----------------------------------------------------//
 
@@ -16,7 +19,7 @@ exports.CreateModelContract = async (req, res) => {
       return res.status(400).json({
         error: true,
         status: 400,
-        message: 'company not found',
+        message: "company not found",
       });
     }
 
@@ -34,7 +37,7 @@ exports.CreateModelContract = async (req, res) => {
     result.value.modelContractId = modelContractId;
     result.value.companyId = company.companyId;
 
-    const newModelContract = new Contract(result.value);
+    const newModelContract = new ModelContract(result.value);
     await newModelContract.save();
 
     return res.status(200).json({
@@ -62,7 +65,6 @@ exports.GetCompanies = async (req, res) => {
       data: companies,
       message: "get companies success",
     });
-
   } catch (error) {
     console.error("get companies error", error);
     return res.status(500).json({
@@ -74,9 +76,10 @@ exports.GetCompanies = async (req, res) => {
 
 exports.GetModelContractByCompany = async (req, res) => {
   try {
-    const result = GetModelContractByCompanyRequest.validate(req.body);
+    const companyId = req.params.id;
+
     const company = await Company.findOne({
-      companyId: result.value.companyId,
+      companyId,
     });
 
     if (company.banStatus) {
@@ -87,8 +90,8 @@ exports.GetModelContractByCompany = async (req, res) => {
     }
 
     const Models = await ModelContract.find(
-      { company },
-      { modelContractName: 1 }
+      { companyId },
+      { modelContractName: 1, modelContractId: 1 }
     );
 
     return res.status(200).json({
@@ -107,21 +110,10 @@ exports.GetModelContractByCompany = async (req, res) => {
 
 exports.GetModelContractById = async (req, res) => {
   try {
-    const result = getModelContractByIdRequest.validate(req.body);
-    const company = await Company.findOne({
-      companyId: result.value.companyId,
-    });
-
-    if (company.banStatus) {
-      return res.status(400).json({
-        error: true,
-        message: "Cannot get data,you had ban",
-      });
-    }
+    const modelContractId = req.params.id;
 
     const Models = await ModelContract.findOne({
-      companyId: result.value.companyId,
-      modelContractId: result.value.modelContractId,
+      modelContractId,
     });
 
     return res.status(200).json({

@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 
 const modelContract = new Schema(
 	{
-		modelContractId: { type: String, required: true , unique: true},
-		modelContractName: { type: String, required: true , unique: true},
-		companyId: { type: String, required: true , unique: true},
+		modelContractId: { type: String, required: true },
+		modelContractName: { type: String, required: true },
+		companyId: { type: String, required: true },
 		data: [Schema.Types.Mixed]
 	},
 	{
