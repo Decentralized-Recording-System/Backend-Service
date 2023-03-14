@@ -9,13 +9,9 @@ const { companySchema } = require("../company/dto/register.request");
 const { hashPassword } = require("../../utils/helpers/login.service");
 const { generateJwt } = require("../../utils/helpers/generateJwt");
 const ethers = require("ethers");
-const {
-  adminProvider,
-} = require("../../utils/helpers/blockchain/initializeAdminProvider");
+const {adminProvider} = require("../../utils/helpers/blockchain/initializeAdminProvider");
 const DRS_DATA_STORE = require("../../utils/helpers/blockchain/abi/DRS_DATA_STORE.json");
-const {
-  userProvider,
-} = require("../../utils/helpers/blockchain/initializeUserProvider");
+const {userProvider} = require("../../utils/helpers/blockchain/initializeUserProvider");
 
 // ------------------------------------------------- Register --------------------------------------------------------
 
@@ -175,9 +171,9 @@ exports.Activate = async (req, res) => {
 
       // interact blockchain add address
 
-      let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+      const contractAddress = process.env.DRS_CONTRACT_ADDRESS;
       const { walletSigner } = adminProvider();
-      let contract = new ethers.Contract(
+      const contract = new ethers.Contract(
         contractAddress,
         DRS_DATA_STORE,
         walletSigner
@@ -187,7 +183,9 @@ exports.Activate = async (req, res) => {
 
       //save
       company.active = true;
+
       await company.save();
+
       return res.status(200).json({
         success: true,
         message: "Account activated.",
@@ -207,6 +205,7 @@ exports.Activate = async (req, res) => {
 exports.ForgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
+
     if (!email) {
       return res.status(400).json({
         status: 400,
@@ -214,9 +213,11 @@ exports.ForgotPassword = async (req, res) => {
         message: "Cannot be processed",
       });
     }
+
     const company = await Company.findOne({
       email: email,
     });
+
     if (!company) {
       return res.status(200).json({
         success: true,
@@ -224,18 +225,24 @@ exports.ForgotPassword = async (req, res) => {
           "If that email address is in our database, we will send you an email to reset your password",
       });
     }
+
     let code = Math.floor(100000 + Math.random() * 900000);
     let response = await sendEmail(company.email, code);
+
     if (response.error) {
       return res.status(500).json({
         error: true,
         message: "Couldn't send mail. Please try again later.",
       });
     }
+
     let expiry = new Date(Date.now() + 60 * 1000 * 15);
+
     company.resetPasswordToken = code;
     company.resetPasswordExpires = expiry; // 15 minutes
+
     await company.save();
+
     return res.status(200).json({
       success: true,
       message:
@@ -373,7 +380,6 @@ exports.Logout = async (req, res) => {
 
 exports.CheckAccessToken = async (req, res) => {
   try {
-    const { id } = req.decodedData;
     return res.status(200).json({ success: true, message: "you are in" });
   } catch (error) {
     console.error("you are not in", error);
@@ -474,7 +480,7 @@ exports.GetUserDrivingData = async (req, res) => {
       });
     }
 
-    let contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+    const contractAddress = process.env.DRS_CONTRACT_ADDRESS;
 
     const { walletSigner } = userProvider(company.mnemonic);
 

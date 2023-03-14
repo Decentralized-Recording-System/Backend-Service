@@ -17,7 +17,7 @@ const sendCreateContractEmail = async (email, Data) => {
           <input type="text" name="name" required>
           <br>
           <label for="description">Description:</label>
-          <textarea name="description" required></textarea>
+          <textarea name="description" required>${Data}</textarea>
           <br>
           <label for="info">Contract Information:</label>
           <textarea name="info" required></textarea>

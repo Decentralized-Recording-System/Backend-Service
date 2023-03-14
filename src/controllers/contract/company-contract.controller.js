@@ -11,26 +11,29 @@ const {
   sendCreateContractEmail,
 } = require("../../utils/helpers/mailer/create-contract.mailer");
 const {
-  CreateContractRequest,
   SendEmailToUserRequest,
   signContractRequest,
   GetContractById,
-  AssentContractRequest,
 } = require("./dto");
-//----------------------------------------------------//
+const { userProvider } = require("../../utils/helpers/blockchain/initializeUserProvider");
+const { ethers } = require("ethers");
+const DRS_DATA_STORE = require("../../utils/helpers/blockchain/abi/DRS_DATA_STORE.json");
 
 //----------------------------------------------------//
-
 exports.SendEmailToUser = async (req, res) => {
   try {
     const { id } = req.decodedData;
-    const { contractId } = req.body;
-
-    SendEmailToUserRequest.validate(req.body);
-
-    const contract = await Contract.findOne({ contractId: contractId });
-
+    const contractId = req.params.id;
+    const contract = await Contract.findOne({ contractId: contractId },{carId:1,companyId:1,contractData:1,contractId:1,contractType:1,contractValue:1,promotionCodeId:1,userId:1});
     const user = await Users.findOne({ userId: contract.userId });
+    const company = await Company.findOne({companyId:id})
+
+    if(!company || !contract||!user || company.banStatus){
+      return res.status(400).json({
+        error: true,
+        message: "Couldn't send email ,Email has been sent,not found",
+      });
+    }
 
     if (contract.companyId === id) {
       if (contract.emailStatus === EmailStatus.SENT) {
@@ -42,7 +45,7 @@ exports.SendEmailToUser = async (req, res) => {
 
       const sendCodeStatus = await sendCreateContractEmail(
         user.email,
-        contract.contractData
+        {contract,company:company.companyName}
       );
 
       if (sendCodeStatus.error) {
@@ -51,13 +54,16 @@ exports.SendEmailToUser = async (req, res) => {
           message: "Couldn't send contract data  email.",
         });
       }
+
       contract.emailStatus = EmailStatus.SENT;
       await contract.save();
+
       return res.status(200).json({
         success: true,
         message: "Sent email Success",
       });
     }
+
     return res.status(400).json({
       error: true,
       status: 400,
@@ -77,21 +83,43 @@ exports.SendEmailToUser = async (req, res) => {
 exports.signContract = async (req, res) => {
   try {
     const { id } = req.decodedData;
-    const { contractId } = req.body;
-    signContractRequest.validate(req.body);
-
+    const  contractId  = req.params.id;
     const contract = await Contract.findOne({ contractId: contractId });
+    const company = await Company.findOne({companyId:id});
+
+    if(!company || company.banStatus){
+      return res.status(400).json({
+      error: true,
+      message: "company not found",
+      });
+    }
 
     if (contract.companyId === id) {
       // for sign in blockchain
+      const contractAddress = process.env.DRS_CONTRACT_ADDRESS;
 
+      const { walletSigner } = userProvider(company.mnemonic);
+  
+      const contractStoreDate = new ethers.Contract(
+        contractAddress,
+        DRS_DATA_STORE,
+        walletSigner
+      );
+  
+      // save data
+      const result = await contractStoreDate.getUsers();
+  
       contract.status = ContractStatus.ACTIVE;
+
       await contract.save();
+
       return res.status(200).json({
         success: true,
         message: "Sign Contract Success",
       });
+      
     }
+
     return res.status(400).json({
       error: true,
       status: 400,
@@ -144,6 +172,7 @@ exports.getContractByCompany = async (req, res) => {
 exports.getContractById = async (req, res) => {
   try {
     const { id } = req.decodedData;
+    const contractId = req.params.id
 
     const company = await Company.findOne({ companyId: id });
 
@@ -154,10 +183,8 @@ exports.getContractById = async (req, res) => {
       });
     }
 
-    const result = GetContractById.validate(req.body);
-
     const contract = await Contract.findOne({
-      contractId: result.value.contractId,
+      contractId,
       companyId: id,
     });
 
@@ -182,33 +209,3 @@ exports.getContractById = async (req, res) => {
     });
   }
 };
-
-//----------------------------------------------------//
-
-exports.TestSendEmailToUser = async (req, res) => {
-  try {
-    const sendCodeStatus = await sendCreateContractEmail(
-      "in.spaymax@gmail.com",
-      "test contract.contractData"
-    );
-
-    if (sendCodeStatus.error) {
-      return res.status(500).json({
-        error: true,
-        message: "Couldn't send contract data  email.",
-      });
-    }
-    return res.status(200).json({
-      success: true,
-      message: "Sent email Success",
-    });
-  } catch (error) {
-    console.error("Sent email error", error);
-    return res.status(500).json({
-      error: true,
-      message: "Cannot sent email",
-    });
-  }
-};
-
-//----------------------------------------------------//

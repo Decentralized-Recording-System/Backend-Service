@@ -4,13 +4,18 @@ const CompanyContractController = require("../controllers/contract/company-contr
 const UserContractController = require("../controllers/contract/user-contract.controller");
 
 const verifyAuth = require("../middle-wares/validateToken");
-const cleanBody = require("../middle-wares/clean-body");
+
+router.post("/user", verifyAuth, UserContractController.getContracts);
 
 router.post("/user/create", verifyAuth, UserContractController.CreateContract);
 
 router.post("/user/assent", verifyAuth, UserContractController.AssentContract);
 
 router.post("/user/un-assent", verifyAuth, UserContractController.UnAssentContract);
+
+router.post("/user/:id", verifyAuth, UserContractController.getContractById);
+
+//----------------------------------------------------------------------------------
 
 router.get("/company/:id",verifyAuth,CompanyContractController.getContractByCompany);
 

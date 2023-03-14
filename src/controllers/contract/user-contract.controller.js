@@ -1,22 +1,9 @@
 require("dotenv").config();
 const { v4: uuid } = require("uuid");
-const { Company } = require("../../models/company/company.model");
 const { Contract } = require("../../models/contract/contract.model");
 const { Users } = require("../../models/users/user.model");
-const {
-  EmailStatus,
-  ContractStatus,
-} = require("../../models/enum/contract.enum");
-const {
-  sendCreateContractEmail,
-} = require("../../utils/helpers/mailer/create-contract.mailer");
-const {
-  CreateContractRequest,
-  SendEmailToUserRequest,
-  signContractRequest,
-  GetContractById,
-  AssentContractRequest,
-} = require("./dto");
+const {ContractStatus,} = require("../../models/enum/contract.enum");
+const {CreateContractRequest,AssentContractRequest,} = require("./dto");
 
 //----------------------------------------------------//
 
@@ -83,9 +70,10 @@ exports.AssentContract = async (req, res) => {
       contractId: result.value.contractId,
       userId: id,
     });
-    contract.userStatus = ContractStatus.ACTIVE;
 
+    contract.userStatus = ContractStatus.ACTIVE;
     await contract.save();
+
     return res.status(200).json({
       success: true,
       message: "assent contract success",
@@ -129,6 +117,68 @@ exports.UnAssentContract = async (req, res) => {
     return res.status(500).json({
       error: true,
       message: "Cannot un assent contract",
+    });
+  }
+};
+
+exports.getContracts = async (req, res) => {
+  try {
+    const { id } = req.decodedData;
+
+    const contract = await Contract.find({
+      userId: id,
+    });
+
+    if (contract) {
+      return res.status(200).json({
+        success: true,
+        data: contract,
+        message: "get Contract Success",
+      });
+    }
+
+    return res.status(400).json({
+      error: true,
+      status: 400,
+      message: "Please make a valid request or not your contract",
+    });
+  } catch (error) {
+    console.error("get contract error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot get contract ",
+    });
+  }
+};
+
+exports.getContractById = async (req, res) => {
+  try {
+    const { id } = req.decodedData;
+    const contractId = req.params.id
+
+    const contract = await Contract.findOne({
+      contractId,
+      userId: id,
+    });
+
+    if (contract) {
+      return res.status(200).json({
+        success: true,
+        data: contract,
+        message: "get Contract Success",
+      });
+    }
+
+    return res.status(400).json({
+      error: true,
+      status: 400,
+      message: "Please make a valid request or not your contract",
+    });
+  } catch (error) {
+    console.error("get contract error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot get contract ",
     });
   }
 };
