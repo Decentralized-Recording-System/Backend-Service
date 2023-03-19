@@ -78,7 +78,9 @@ exports.Register = async (req, res) => {
     });
   }
 };
+
 // ------------------------------------------------- login --------------------------------------------------------
+
 exports.Login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -429,34 +431,7 @@ exports.GetUserData = async (req, res) => {
   }
 };
 
-// ------------------------------------------------- get all users --------------------------------------------------------
-
-exports.GetUsers = async (req, res) => {
-  try {
-    const user = await Users.find({}, { userId: 1, address: 1 });
-
-    if (!user) {
-      return res.status(400).json({
-        error: true,
-        message: "user not found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Get users data success",
-      data: user,
-    });
-  } catch (error) {
-    console.error("cannot get data ", error);
-    return res.status(500).json({
-      error: true,
-      message: error.message,
-    });
-  }
-};
-
-// ------------------------------------------------- get user data--------------------------------------------------------
+// ------------------------------------------------- Add Driving Data--------------------------------------------------------
 
 exports.AddDrivingData = async (req, res) => {
   try {
@@ -484,7 +459,12 @@ exports.AddDrivingData = async (req, res) => {
 
     const result = await contract.AddUserDrivingData(data);
 
-    return res.status(200).json(result);
+    return res.status(200).json({
+      success: true,
+      message: "Add user data success",
+      data: result,
+    });
+
   } catch (error) {
     console.error("cannot get data ", error);
     return res.status(500).json({
@@ -493,6 +473,8 @@ exports.AddDrivingData = async (req, res) => {
     });
   }
 };
+
+// ------------------------------------------------- Add Driving Data--------------------------------------------------------
 
 exports.GetDrivingData = async (req, res) => {
   try {
@@ -529,7 +511,12 @@ exports.GetDrivingData = async (req, res) => {
       score: parseInt(item.score._hex),
     }));
 
-    return res.status(200).json(response);
+    return res.status(200).json({
+      success: true,
+      message: "Get user data success",
+      data: response,
+    });
+
   } catch (error) {
     console.error("cannot get data ", error);
     return res.status(500).json({

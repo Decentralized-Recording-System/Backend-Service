@@ -74,6 +74,7 @@ exports.Register = async (req, res) => {
     });
   }
 };
+
 // ------------------------------------------------- login --------------------------------------------------------
 exports.Login = async (req, res) => {
   try {
@@ -392,7 +393,7 @@ exports.CheckAccessToken = async (req, res) => {
 
 // ------------------------------------------------- get company data--------------------------------------------------------
 
-exports.GetUserData = async (req, res) => {
+exports.GetCompanyData = async (req, res) => {
   try {
     const { id } = req.decodedData;
     const company = await Company.findOne(
@@ -423,7 +424,7 @@ exports.GetUserData = async (req, res) => {
 
 // ------------------------------------------------- get all user data--------------------------------------------------------
 
-exports.GetUsersDrivingData = async (req, res) => {
+exports.GetUsersTinyData = async (req, res) => {
   try {
     const { id } = req.decodedData;
 
@@ -464,6 +465,8 @@ exports.GetUsersDrivingData = async (req, res) => {
     });
   }
 };
+
+// ------------------------------------------------- get user data--------------------------------------------------------
 
 exports.GetUserDrivingData = async (req, res) => {
   try {
