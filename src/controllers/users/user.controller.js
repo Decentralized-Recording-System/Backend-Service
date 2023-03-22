@@ -180,7 +180,7 @@ exports.Activate = async (req, res) => {
         DRS_DATA_STORE,
         walletSigner
       );
-      await contract.AddUserAddress(user.address);
+      await contract.addUserAddress(user.address);
 
       // save address
       user.active = true;
@@ -457,7 +457,7 @@ exports.AddDrivingData = async (req, res) => {
       walletSigner
     );
 
-    const result = await contract.AddUserDrivingData(data);
+    const result = await contract.userAddDrivingData(data);
 
     return res.status(200).json({
       success: true,
@@ -498,7 +498,7 @@ exports.GetDrivingData = async (req, res) => {
       walletSigner
     );
 
-    const result = await contract.GetUserDrivingData();
+    const result = await contract.userGetUserDrivingData();
 
     const response = result.map((item) => ({
       braking: parseInt(item.braking._hex),

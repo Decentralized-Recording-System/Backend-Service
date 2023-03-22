@@ -180,7 +180,7 @@ exports.Activate = async (req, res) => {
         walletSigner
       );
 
-      await contract.AddCompanyAddress(company.address);
+      await contract.addCompanyAddress(company.address);
 
       //save
       company.active = true;
@@ -447,7 +447,7 @@ exports.GetUsersTinyData = async (req, res) => {
       walletSigner
     );
 
-    const result = await contract.getUsers();
+    const result = await contract.companyGetUsers();
 
     const response = result.map((item) => ({
       address: item.user,
@@ -493,7 +493,7 @@ exports.GetUserDrivingData = async (req, res) => {
       walletSigner
     );
 
-    const result = await contract.AdminGetUserDrivingData(address);
+    const result = await contract.companyGetUserDrivingData(address);
 
     const response = result.map((item) => ({
       braking: parseInt(item.braking._hex),
