@@ -39,6 +39,11 @@
           },
           {
             "internalType": "string",
+            "name": "contractData",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
             "name": "start",
             "type": "string"
           },
@@ -97,6 +102,11 @@
             "internalType": "uint256",
             "name": "contractValue",
             "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "contractData",
+            "type": "string"
           },
           {
             "internalType": "string",

@@ -11,24 +11,33 @@ const {
   sendCreateContractEmail,
 } = require("../../utils/helpers/mailer/create-contract.mailer");
 const {
-  SendEmailToUserRequest,
-  signContractRequest,
-  GetContractById,
-} = require("./dto");
-const { userProvider } = require("../../utils/helpers/blockchain/initializeUserProvider");
+  userProvider,
+} = require("../../utils/helpers/blockchain/initializeUserProvider");
 const { ethers } = require("ethers");
-const DRS_DATA_STORE = require("../../utils/helpers/blockchain/abi/DRS_DATA_STORE.json");
+const INSURANCE_CONTRACT = require("../../utils/helpers/blockchain/abi/INSURANCE_CONTRACT.json");
 
 //----------------------------------------------------//
 exports.SendEmailToUser = async (req, res) => {
   try {
     const { id } = req.decodedData;
     const contractId = req.params.id;
-    const contract = await Contract.findOne({ contractId: contractId },{carId:1,companyId:1,contractData:1,contractId:1,contractType:1,contractValue:1,promotionCodeId:1,userId:1});
+    const contract = await Contract.findOne(
+      { contractId: contractId },
+      {
+        carId: 1,
+        companyId: 1,
+        contractData: 1,
+        contractId: 1,
+        contractType: 1,
+        contractValue: 1,
+        promotionCodeId: 1,
+        userId: 1,
+      }
+    );
     const user = await Users.findOne({ userId: contract.userId });
-    const company = await Company.findOne({companyId:id})
+    const company = await Company.findOne({ companyId: id });
 
-    if(!company || !contract||!user || company.banStatus){
+    if (!company || !contract || !user || company.banStatus) {
       return res.status(400).json({
         error: true,
         message: "Couldn't send email ,Email has been sent,not found",
@@ -43,10 +52,10 @@ exports.SendEmailToUser = async (req, res) => {
         });
       }
 
-      const sendCodeStatus = await sendCreateContractEmail(
-        user.email,
-        {contract,company:company.companyName}
-      );
+      const sendCodeStatus = await sendCreateContractEmail(user.email, {
+        contract,
+        company: company.companyName,
+      });
 
       if (sendCodeStatus.error) {
         return res.status(500).json({
@@ -83,32 +92,48 @@ exports.SendEmailToUser = async (req, res) => {
 exports.signContract = async (req, res) => {
   try {
     const { id } = req.decodedData;
-    const  contractId  = req.params.id;
+    const contractId = req.params.id;
     const contract = await Contract.findOne({ contractId: contractId });
-    const company = await Company.findOne({companyId:id});
+    const company = await Company.findOne({ companyId: id });
 
-    if(!company || company.banStatus){
+    if (!company || company.banStatus) {
       return res.status(400).json({
-      error: true,
-      message: "company not found",
+        error: true,
+        message: "company not found",
       });
     }
 
     if (contract.companyId === id) {
       // for sign in blockchain
-      const contractAddress = process.env.DRS_CONTRACT_ADDRESS;
+      const contractAddress = process.env.INSURANCE_CONTRACT_ADDRESS;
 
       const { walletSigner } = userProvider(company.mnemonic);
-  
+
       const contractStoreDate = new ethers.Contract(
         contractAddress,
-        DRS_DATA_STORE,
+        INSURANCE_CONTRACT,
         walletSigner
       );
-  
+
       // save data
-      const result = await contractStoreDate.getUsers();
-  
+      const body = {
+        user: contract.userId,
+        company: contract.companyId,
+        contractValue: contract.contractValue,
+        contractData: contract.contractData,
+        start: contract.start.toISOString(),
+        expire: contract.expire.toISOString(),
+      };
+
+      const result = await contractStoreDate.createContract(body);
+
+      if (!result) {
+        return res.status(400).json({
+          error: true,
+          status: 400,
+          message: "contract error",
+        });
+      }
       contract.status = ContractStatus.ACTIVE;
 
       await contract.save();
@@ -117,7 +142,6 @@ exports.signContract = async (req, res) => {
         success: true,
         message: "Sign Contract Success",
       });
-      
     }
 
     return res.status(400).json({
@@ -134,7 +158,7 @@ exports.signContract = async (req, res) => {
   }
 };
 
-//----------------------------------------------------//
+//---------------------get Contract By Company-------------------------------//
 
 exports.getContractByCompany = async (req, res) => {
   try {
@@ -167,12 +191,12 @@ exports.getContractByCompany = async (req, res) => {
   }
 };
 
-//----------------------------------------------------//
+//-------------------------get Contract By Id---------------------------//
 
 exports.getContractById = async (req, res) => {
   try {
     const { id } = req.decodedData;
-    const contractId = req.params.id
+    const contractId = req.params.id;
 
     const company = await Company.findOne({ companyId: id });
 
@@ -200,6 +224,54 @@ exports.getContractById = async (req, res) => {
       error: true,
       status: 400,
       message: "Please make a valid request or not your contract",
+    });
+  } catch (error) {
+    console.error("get contract error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot get contract ",
+    });
+  }
+};
+
+//-------------------------get Contract from blockchain---------------------------//
+
+exports.getContractFromBlockchain = async (req, res) => {
+  try {
+    const { id } = req.decodedData;
+    const company = await Company.findOne({ companyId: id });
+
+    if (company.banStatus) {
+      return res.status(400).json({
+        error: true,
+        message: "Cannot get data,you had ban",
+      });
+    }
+
+    const contractAddress = process.env.INSURANCE_CONTRACT_ADDRESS;
+
+    const { walletSigner } = userProvider(company.mnemonic);
+
+    const contractStoreDate = new ethers.Contract(
+      contractAddress,
+      INSURANCE_CONTRACT,
+      walletSigner
+    );
+
+    const result = await contractStoreDate.getAllContract();
+
+    if (!result) {
+      return res.status(400).json({
+        error: true,
+        status: 400,
+        message: "contract error",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+      message: "get Contract Success",
     });
   } catch (error) {
     console.error("get contract error", error);

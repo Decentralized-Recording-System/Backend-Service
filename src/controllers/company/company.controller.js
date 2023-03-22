@@ -9,9 +9,15 @@ const { companySchema } = require("../company/dto/register.request");
 const { hashPassword } = require("../../utils/helpers/login.service");
 const { generateJwt } = require("../../utils/helpers/generateJwt");
 const ethers = require("ethers");
-const {adminProvider} = require("../../utils/helpers/blockchain/initializeAdminProvider");
+const {
+  adminProvider,
+} = require("../../utils/helpers/blockchain/initializeAdminProvider");
 const DRS_DATA_STORE = require("../../utils/helpers/blockchain/abi/DRS_DATA_STORE.json");
-const {userProvider} = require("../../utils/helpers/blockchain/initializeUserProvider");
+const INSURANCE_CONTRACT = require("../../utils/helpers/blockchain/abi/INSURANCE_CONTRACT.json");
+
+const {
+  userProvider,
+} = require("../../utils/helpers/blockchain/initializeUserProvider");
 
 // ------------------------------------------------- Register --------------------------------------------------------
 
@@ -179,8 +185,15 @@ exports.Activate = async (req, res) => {
         DRS_DATA_STORE,
         walletSigner
       );
+      const insuranceContractAddress = process.env.INSURANCE_CONTRACT_ADDRESS;
+      const InsuranceContract = new ethers.Contract(
+        insuranceContractAddress,
+        INSURANCE_CONTRACT,
+        walletSigner
+      );
 
       await contract.addCompanyAddress(company.address);
+      await InsuranceContract.addCompanyAddress(company.address);
 
       //save
       company.active = true;
