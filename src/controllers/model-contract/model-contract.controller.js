@@ -9,7 +9,6 @@ const {
   getModelContractByIdRequest,
 } = require("./dto");
 
-//----------------------------------------------------//
 
 exports.CreateModelContract = async (req, res) => {
   try {
@@ -49,6 +48,40 @@ exports.CreateModelContract = async (req, res) => {
     return res.status(500).json({
       error: true,
       message: "Cannot model create contract error ",
+    });
+  }
+};
+
+exports.GetModelContractByOwnCompany = async (req, res) => {
+  try {
+    const { id } = req.decodedData;
+
+    const company = await Company.findOne({
+      companyId: id,
+    });
+
+    if (company.banStatus) {
+      return res.status(400).json({
+        error: true,
+        message: "Cannot get data,company had ban",
+      });
+    }
+
+    const Models = await ModelContract.find(
+      { companyId: id },
+      { modelContractName: 1, modelContractId: 1 }
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: Models,
+      message: "get model contract success",
+    });
+  } catch (error) {
+    console.error("get model contract error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot get model  contract error ",
     });
   }
 };

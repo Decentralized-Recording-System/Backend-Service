@@ -19,8 +19,6 @@ const {
   userProvider,
 } = require("../../utils/helpers/blockchain/initializeUserProvider");
 
-// ------------------------------------------------- Register --------------------------------------------------------
-
 exports.Register = async (req, res) => {
   try {
     const result = companySchema.validate(req.body);
@@ -80,8 +78,6 @@ exports.Register = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- login --------------------------------------------------------
 exports.Login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -145,9 +141,6 @@ exports.Login = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- ActivateUser --------------------------------------------------------
-
 exports.Activate = async (req, res) => {
   try {
     const { email, code } = req.body;
@@ -213,9 +206,6 @@ exports.Activate = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- ForgotPassword --------------------------------------------------------
-
 exports.ForgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -270,9 +260,6 @@ exports.ForgotPassword = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- ResetPassword --------------------------------------------------------
-
 exports.ResetPassword = async (req, res) => {
   try {
     const { token, newPassword, confirmPassword } = req.body;
@@ -316,9 +303,6 @@ exports.ResetPassword = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- ReActivate --------------------------------------------------------
-
 exports.ReActivate = async (req, res) => {
   try {
     const { email } = req.body;
@@ -363,9 +347,6 @@ exports.ReActivate = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- Logout --------------------------------------------------------
-
 exports.Logout = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -389,9 +370,6 @@ exports.Logout = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- check accessToken--------------------------------------------------------
-
 exports.CheckAccessToken = async (req, res) => {
   try {
     return res.status(200).json({ success: true, message: "you are in" });
@@ -403,9 +381,6 @@ exports.CheckAccessToken = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- get company data--------------------------------------------------------
-
 exports.GetCompanyData = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -434,9 +409,6 @@ exports.GetCompanyData = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- get all user data--------------------------------------------------------
-
 exports.GetUsersTinyData = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -478,9 +450,6 @@ exports.GetUsersTinyData = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- get user data--------------------------------------------------------
-
 exports.GetUserDrivingData = async (req, res) => {
   try {
     const address = req.params.id;

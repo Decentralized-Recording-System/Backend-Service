@@ -7,7 +7,6 @@ const {
 const {
   PromotionCode,
 } = require("../../models/promotion-code/promotion-code.model");
-//----------------------------------------------------//
 
 exports.CreatePromotionCode = async (req, res) => {
   try {
@@ -44,7 +43,6 @@ exports.CreatePromotionCode = async (req, res) => {
     });
   }
 };
-
 exports.GetPromotionCodeByCompany = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -75,7 +73,6 @@ exports.GetPromotionCodeByCompany = async (req, res) => {
     });
   }
 };
-
 exports.ValidatePromotionCodeById = async (req, res) => {
   try {
     const { promotionCodeId, companyId } = req.body;
@@ -104,7 +101,6 @@ exports.ValidatePromotionCodeById = async (req, res) => {
     });
   }
 };
-
 exports.UsePromotionCodeById = async (req, res) => {
   try {
     const { promotionCodeId, companyId } = req.body;

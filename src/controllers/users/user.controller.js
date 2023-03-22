@@ -17,8 +17,6 @@ const {
   userProvider,
 } = require("../../utils/helpers/blockchain/initializeUserProvider");
 
-// ------------------------------------------------- Register --------------------------------------------------------
-
 exports.Register = async (req, res) => {
   try {
     const result = userSchema.validate(req.body);
@@ -78,9 +76,6 @@ exports.Register = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- login --------------------------------------------------------
-
 exports.Login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -141,9 +136,6 @@ exports.Login = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- ActivateUser --------------------------------------------------------
-
 exports.Activate = async (req, res) => {
   try {
     const { email, code } = req.body;
@@ -198,9 +190,6 @@ exports.Activate = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- ForgotPassword --------------------------------------------------------
-
 exports.ForgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -246,9 +235,6 @@ exports.ForgotPassword = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- ResetPassword --------------------------------------------------------
-
 exports.ResetPassword = async (req, res) => {
   try {
     const { token, newPassword, confirmPassword } = req.body;
@@ -292,9 +278,6 @@ exports.ResetPassword = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- ReActivate --------------------------------------------------------
-
 exports.ReActivate = async (req, res) => {
   try {
     const { email } = req.body;
@@ -339,9 +322,6 @@ exports.ReActivate = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- Logout --------------------------------------------------------
-
 exports.Logout = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -365,9 +345,6 @@ exports.Logout = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- check accessToken--------------------------------------------------------
-
 exports.CheckAccessToken = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -380,9 +357,6 @@ exports.CheckAccessToken = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- get user data--------------------------------------------------------
-
 exports.GetUserData = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -430,9 +404,6 @@ exports.GetUserData = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- Add Driving Data--------------------------------------------------------
-
 exports.AddDrivingData = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -473,9 +444,6 @@ exports.AddDrivingData = async (req, res) => {
     });
   }
 };
-
-// ------------------------------------------------- Add Driving Data--------------------------------------------------------
-
 exports.GetDrivingData = async (req, res) => {
   try {
     const { id } = req.decodedData;

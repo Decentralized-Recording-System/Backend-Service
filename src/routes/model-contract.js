@@ -8,10 +8,14 @@ const cleanBody = require("../middle-wares/clean-body");
 // for company
 router.post("/company/create", verifyAuth, ModelContractController.CreateModelContract);
 
-router.get("/company", cleanBody, ModelContractController.GetCompanies);
+router.get("/company/data", verifyAuth, ModelContractController.GetModelContractByOwnCompany);
 
-router.get("/company/:id",cleanBody,ModelContractController.GetModelContractByCompany);
+router.get("/company", verifyAuth, ModelContractController.GetCompanies);
 
-router.get("/:id", cleanBody, ModelContractController.GetModelContractById);
+router.get("/company/:id",verifyAuth,ModelContractController.GetModelContractByCompany);
+
+router.get("/:id", verifyAuth, ModelContractController.GetModelContractById);
+
+//full in 22/3
 
 module.exports = router;

@@ -16,7 +16,6 @@ const {
 const { ethers } = require("ethers");
 const INSURANCE_CONTRACT = require("../../utils/helpers/blockchain/abi/INSURANCE_CONTRACT.json");
 
-//----------------------------------------------------//
 exports.SendEmailToUser = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -86,9 +85,6 @@ exports.SendEmailToUser = async (req, res) => {
     });
   }
 };
-
-//----------------------------------------------------//
-
 exports.signContract = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -157,9 +153,6 @@ exports.signContract = async (req, res) => {
     });
   }
 };
-
-//---------------------get Contract By Company-------------------------------//
-
 exports.getContractByCompany = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -190,9 +183,6 @@ exports.getContractByCompany = async (req, res) => {
     });
   }
 };
-
-//-------------------------get Contract By Id---------------------------//
-
 exports.getContractById = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -233,9 +223,6 @@ exports.getContractById = async (req, res) => {
     });
   }
 };
-
-//-------------------------get Contract from blockchain---------------------------//
-
 exports.getContractFromBlockchain = async (req, res) => {
   try {
     const { id } = req.decodedData;

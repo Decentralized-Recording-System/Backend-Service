@@ -14,7 +14,9 @@ router.patch("/password", cleanBody, AuthController.ResetPassword);
 router.get("/logout", verifyAuth, AuthController.Logout);
 router.get("/access", verifyAuth, AuthController.CheckAccessToken);
 
+router.get("/data", verifyAuth, AuthController.GetCompanyData);
+
 router.get("/users", verifyAuth, AuthController.GetUsersTinyData);
 router.get("/users/:id", verifyAuth, AuthController.GetUserDrivingData);
-
+// full in 22/3
 module.exports = router;

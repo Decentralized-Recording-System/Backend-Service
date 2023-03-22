@@ -5,8 +5,6 @@ const { Users } = require("../../models/users/user.model");
 const {ContractStatus,} = require("../../models/enum/contract.enum");
 const {CreateContractRequest,AssentContractRequest,} = require("./dto");
 
-//----------------------------------------------------//
-
 exports.CreateContract = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -50,9 +48,6 @@ exports.CreateContract = async (req, res) => {
     });
   }
 };
-
-//----------------------------------------------------//
-
 exports.AssentContract = async (req, res) => {
   try {
     const { id } = req.decodedData();
@@ -86,8 +81,6 @@ exports.AssentContract = async (req, res) => {
     });
   }
 };
-//----------------------------------------------------//
-
 exports.UnAssentContract = async (req, res) => {
   try {
     const { id } = req.decodedData();
@@ -120,7 +113,6 @@ exports.UnAssentContract = async (req, res) => {
     });
   }
 };
-
 exports.getContracts = async (req, res) => {
   try {
     const { id } = req.decodedData;
@@ -150,7 +142,6 @@ exports.getContracts = async (req, res) => {
     });
   }
 };
-
 exports.getContractById = async (req, res) => {
   try {
     const { id } = req.decodedData;
