@@ -1,12 +1,9 @@
 require("dotenv").config();
 const { v4: uuid } = require("uuid");
 const { Company } = require("../../models/company/company.model");
-const { Contract } = require("../../models/contract/contract.model");
 const { ModelContract } = require("../../models/model-contract/model-contract");
 const {
   CreateModelContractRequest,
-  GetModelContractByCompanyRequest,
-  getModelContractByIdRequest,
 } = require("./dto");
 
 

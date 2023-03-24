@@ -11,7 +11,7 @@ const contractSchema = new Schema(
     carId: { type: String },
     contractValue: { type: Number, required: true },
     contractType: { type: String, enum: ContractType },
-    contractData: { type: String },
+    contractData: { type: [] },
     start: { type: Date, required: true },
     expire: { type: Date, required: true },
     status: {

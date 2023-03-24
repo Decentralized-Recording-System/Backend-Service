@@ -7,7 +7,9 @@ const CreateContractRequest = Joi.object().keys({
 	carId:  Joi.string().required().min(4).max(15),
     contractValue: Joi.number().required().min(0),
 	contractModelType: Joi.string().valid(...Object.values(ContractType)).required(),
-    contractData: Joi.string().required(),
+    contractData: Joi.required(),
+	start:Joi.date().required(),
+	expire:Joi.date().required(),
 	promotionCodeId: Joi.string().optional()
 });
 

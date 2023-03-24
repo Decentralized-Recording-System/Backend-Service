@@ -51,10 +51,7 @@ exports.SendEmailToUser = async (req, res) => {
         });
       }
 
-      const sendCodeStatus = await sendCreateContractEmail(user.email, {
-        contract,
-        company: company.companyName,
-      });
+      const sendCodeStatus = await sendCreateContractEmail(user.email, contract,company.companyName);
 
       if (sendCodeStatus.error) {
         return res.status(500).json({
@@ -101,35 +98,26 @@ exports.signContract = async (req, res) => {
 
     if (contract.companyId === id) {
       // for sign in blockchain
-      const contractAddress = process.env.INSURANCE_CONTRACT_ADDRESS;
 
+      let insuranceContractAddress = process.env.INSURANCE_CONTRACT_ADDRESS;
       const { walletSigner } = userProvider(company.mnemonic);
-
-      const contractStoreDate = new ethers.Contract(
-        contractAddress,
+      let InsuranceContract = new ethers.Contract(
+        insuranceContractAddress,
         INSURANCE_CONTRACT,
         walletSigner
       );
 
-      // save data
       const body = {
-        user: contract.userId,
-        company: contract.companyId,
-        contractValue: contract.contractValue,
-        contractData: contract.contractData,
-        start: contract.start.toISOString(),
-        expire: contract.expire.toISOString(),
+        "contractId":contract.contractId,
+        "contractValue": contract.contractValue,
+        "contractData": JSON.stringify(contract.contractData),
+        "start": contract.start.toLocaleString(),
+        "expire": contract.expire.toLocaleString(),
       };
+      await InsuranceContract.createContract(body);
 
-      const result = await contractStoreDate.createContract(body);
+      // save data
 
-      if (!result) {
-        return res.status(400).json({
-          error: true,
-          status: 400,
-          message: "contract error",
-        });
-      }
       contract.status = ContractStatus.ACTIVE;
 
       await contract.save();

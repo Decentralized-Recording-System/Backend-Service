@@ -1,7 +1,7 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-const sendCreateContractEmail = async (email, Data) => {
+const sendCreateContractEmail = async (email, contract,company) => {
   const body_html = `
     <!DOCTYPE html>
       <html>
@@ -12,18 +12,18 @@ const sendCreateContractEmail = async (email, Data) => {
       </head>
       <body>
         <h1>Car Insurance Contract</h1>
-        <form method="post" action="http://localhost:3000/submit">
+        <form method="post" action=http://localhost:5000/contract/user/assent/${contract.contractId}>
           <label for="name">Name:</label>
           <input type="text" name="name" required>
           <br>
           <label for="description">Description:</label>
-          <textarea name="description" required>${Data}</textarea>
+          <p name="description" required>${company}</p>
           <br>
           <label for="info">Contract Information:</label>
-          <textarea name="info" required></textarea>
+          <p name="info" required>${contract}</p>
           <br>
           <input type="submit" value="Submit">
-          <input type="button" value="Cancel" onclick="location.href='http://localhost:3000/cancel';">
+          <input type="button" value="Cancel" onclick="location.href='http://localhost:5000/contract/user/un-assent/${contract.contractId}';">
         </form>
       </body>
       </html>

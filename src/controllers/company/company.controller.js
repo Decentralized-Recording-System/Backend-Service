@@ -474,6 +474,7 @@ exports.GetUserDrivingData = async (req, res) => {
       DRS_DATA_STORE,
       walletSigner
     );
+    console.log({address});
 
     const result = await contract.companyGetUserDrivingData(address);
 

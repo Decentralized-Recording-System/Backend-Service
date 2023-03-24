@@ -1,143 +1,133 @@
 [
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "member",
-        "type": "address"
-      }
-    ],
-    "name": "addCompanyAddress",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "user",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "company",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "contractValue",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "contractData",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "start",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "expire",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct INSURANCE_CONTRACT.ContractData",
-        "name": "_data",
-        "type": "tuple"
-      }
-    ],
-    "name": "createContract",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAllCompanyAddress",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAllContract",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "user",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "company",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "contractValue",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "contractData",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "start",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "expire",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct INSURANCE_CONTRACT.ContractData[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getSizeOfCompanyAddress",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "member",
+				"type": "address"
+			}
+		],
+		"name": "addCompanyAddress",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "contractId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "contractValue",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "contractData",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "start",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "expire",
+						"type": "string"
+					}
+				],
+				"internalType": "struct INSURANCE_CONTRACT.ContractData",
+				"name": "_data",
+				"type": "tuple"
+			}
+		],
+		"name": "createContract",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllCompanyAddress",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllContract",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "contractId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "contractValue",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "contractData",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "start",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "expire",
+						"type": "string"
+					}
+				],
+				"internalType": "struct INSURANCE_CONTRACT.ContractData[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getSizeOfCompanyAddress",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
 ]

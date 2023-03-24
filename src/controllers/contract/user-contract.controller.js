@@ -50,20 +50,11 @@ exports.CreateContract = async (req, res) => {
 };
 exports.AssentContract = async (req, res) => {
   try {
-    const { id } = req.decodedData();
 
-    const result = AssentContractRequest.validate(req.bod);
-
-    if (!result.value.singName) {
-      return res.status(400).json({
-        error: true,
-        message: "don't have name sing",
-      });
-    }
-
+    const contractId = req.params.id;
+    console.log(contractId);
     const contract = await Contract.findOne({
-      contractId: result.value.contractId,
-      userId: id,
+      contractId
     });
 
     contract.userStatus = ContractStatus.ACTIVE;
