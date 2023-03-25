@@ -1,12 +1,8 @@
 require("dotenv").config();
 const shortid = require('shortid');
 const { Company } = require("../../models/company/company.model");
-const {
-  CreatePromotionCodeRequest,
-} = require("./dto/create-promotion-code.request");
-const {
-  PromotionCode,
-} = require("../../models/promotion-code/promotion-code.model");
+const { CreatePromotionCodeRequest,} = require("./dto/create-promotion-code.request");
+const { PromotionCode,} = require("../../models/promotion-code/promotion-code.model");
 
 exports.CreatePromotionCode = async (req, res) => {
   try {
