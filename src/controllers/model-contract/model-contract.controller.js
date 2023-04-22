@@ -83,6 +83,40 @@ exports.GetModelContractByOwnCompany = async (req, res) => {
   }
 };
 
+exports.GetModelContractByOwnCompanyId = async (req, res) => {
+   try {
+    const modelContractId = req.params.id;
+     const { id } = req.decodedData;
+
+    const company = await Company.findOne({
+      companyId: id,
+    });
+
+    if (company.banStatus) {
+      return res.status(400).json({
+        error: true,
+        message: "Cannot get data,company had ban",
+      });
+    }
+
+    const Models = await ModelContract.findOne({
+      modelContractId,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: Models,
+      message: "get model contract success",
+    });
+  } catch (error) {
+    console.error("get model contract error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot get model  contract error ",
+    });
+  }
+};
+
 exports.GetCompanies = async (req, res) => {
   try {
     const companies = await Company.find(
