@@ -32,6 +32,7 @@ exports.CreatePromotionCode = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Create Promotion Code success",
+      data: newPromotionCode
     });
   } catch (error) {
     console.error("Create-Promotion-Code-error", error);
@@ -73,17 +74,22 @@ exports.GetPromotionCodeByCompany = async (req, res) => {
 };
 exports.ValidatePromotionCodeById = async (req, res) => {
   try {
-    const { promotionCodeId, companyId } = req.body;
+    const { promotionCodeId ,companyId} = req.body;
 
     const promotionCode = await PromotionCode.findOne({
-      companyId,
-      promotionCodeId,
+      promotionCodeId,companyId,
     });
 
     if (!promotionCode) {
       return res.status(400).json({
         error: true,
         message: "this code invalid",
+      });
+    }
+    if(promotionCode.quantity <= promotionCode.used){
+      return res.status(400).json({
+        error: true,
+        message: "this code used",
       });
     }
     return res.status(200).json({
