@@ -150,8 +150,7 @@ exports.getContractByCompany = async (req, res) => {
     const { id } = req.decodedData
 
     const contracts = await Contract.find(
-      { companyId: id },
-      { contractId: 1, contractType: 1, contractValue: 1 }
+      { companyId: id }
     )
 
     if (contracts) {

@@ -4,6 +4,7 @@ const { v4: uuid } = require("uuid");
 const { sendEmail } = require("../../utils/helpers/mailer/otp.mailer");
 const { generateMnemonic } = require("../../utils/helpers/generateMnemonic");
 const { Company } = require("../../models/company/company.model");
+const { Contract } = require("../../models/contract/contract.model");
 const { getUserCredential } = require("../../utils/helpers/getUserCredentials");
 const { companySchema } = require("../company/dto/register.request");
 const { hashPassword } = require("../../utils/helpers/login.service");
@@ -490,6 +491,54 @@ exports.GetUserDrivingData = async (req, res) => {
     }));
 
     return res.status(200).json(response);
+  } catch (error) {
+    console.error("cannot get data ", error);
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+exports.GetMyUsers = async (req, res) => {
+  try {
+    const { id } = req.decodedData;
+
+    const company = await Company.findOne({ companyId: id });
+
+    if (!company) {
+      return res.status(400).json({
+        error: true,
+        message: "Email not found",
+      });
+    }
+
+    const data = await Contract.find({companyId:company.id});
+
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error("cannot get data ", error);
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+exports.GetNotMyUsers = async (req, res) => {
+  try {
+    const { id } = req.decodedData;
+
+    const company = await Company.findOne({ companyId: id });
+
+    if (!company) {
+      return res.status(400).json({
+        error: true,
+        message: "Email not found",
+      });
+    }
+
+    const data = await Contract.find({companyId:company.companyId},{userId:1});
+
+    return res.status(200).json(data);
   } catch (error) {
     console.error("cannot get data ", error);
     return res.status(500).json({
