@@ -1,7 +1,7 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
-async function sendPromotionCodeEmail (email, code,description) {
+async function sendPromotionCodeEmail (email, code,description,company) {
 	try {
 		const smtpEndpoint = 'smtp.gmail.com';
 		const port = 465;
@@ -15,6 +15,7 @@ async function sendPromotionCodeEmail (email, code,description) {
 								<script src="https://smtpjs.com/v3/smtp.js">
 								</script>
 								<body>
+									<p>From company : </p> <b>${company}</b>
 									<p>Your Promotion code is : </p> <b>${code}</b>
 									<p>Description : </p> 
 									<p>${description}</p> 

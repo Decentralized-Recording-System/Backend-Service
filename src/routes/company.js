@@ -19,7 +19,7 @@ router.get("/data", verifyAuth, AuthController.GetCompanyData);
 router.get("/users", verifyAuth, AuthController.GetUsersTinyData);
 router.get("/users/:id", verifyAuth, AuthController.GetUserDrivingData);
 
-router.get("/my-users", verifyAuth, AuthController.GetMyUsers);
+router.get("/old-users", verifyAuth, AuthController.GetMyUsers);
 router.get("/not-my-users", verifyAuth, AuthController.GetNotMyUsers);
 // full in 22/3
 module.exports = router;

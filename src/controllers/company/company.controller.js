@@ -522,9 +522,15 @@ exports.GetMyUsers = async (req, res) => {
       });
     }
 
-    const data = await Contract.find({companyId:company.id});
+    const data = await Contract.find({companyId:id});
 
-    return res.status(200).json(data);
+    const allUsers = await Users.find({}, { address: 1, userId: 1 });
+
+    const MyUser = allUsers.filter(user => data.some(contract => contract.userId === user.userId));
+
+    const promises = data.map(item => ({ data: item, address: MyUser.filter(i => i.userId === item.userId)[0].address }));
+
+    return res.status(200).json(promises);
   } catch (error) {
     console.error("cannot get data ", error);
     return res.status(500).json({
@@ -533,6 +539,7 @@ exports.GetMyUsers = async (req, res) => {
     });
   }
 };
+
 exports.GetNotMyUsers = async (req, res) => {
   try {
     const { id } = req.decodedData;

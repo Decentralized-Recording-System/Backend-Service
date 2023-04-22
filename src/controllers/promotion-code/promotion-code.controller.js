@@ -151,6 +151,9 @@ exports.SendPromotionCodeToUser = async (req, res) => {
       companyId:id,
       promotionCodeId,
     });
+    const company = await Company.findOne({
+      companyId:id,
+    });
     const user = await Users.findOne({
       address
     });
@@ -170,7 +173,7 @@ exports.SendPromotionCodeToUser = async (req, res) => {
     }
 
     if (promotionCode.used < promotionCode.quantity) {
-      await sendPromotionCodeEmail(user.email,promotionCode.promotionCodeId,promotionCode.description);
+      await sendPromotionCodeEmail(user.email,promotionCode.promotionCodeId,promotionCode.description,company.companyName);
       return res.status(200).json({
         success: true,
         message: "send promotion code success",
