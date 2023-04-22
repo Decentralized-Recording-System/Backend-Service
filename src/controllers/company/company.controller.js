@@ -5,6 +5,7 @@ const { sendEmail } = require("../../utils/helpers/mailer/otp.mailer");
 const { generateMnemonic } = require("../../utils/helpers/generateMnemonic");
 const { Company } = require("../../models/company/company.model");
 const { Contract } = require("../../models/contract/contract.model");
+const { Users } = require("../../models/users/user.model");
 const { getUserCredential } = require("../../utils/helpers/getUserCredentials");
 const { companySchema } = require("../company/dto/register.request");
 const { hashPassword } = require("../../utils/helpers/login.service");
@@ -414,7 +415,7 @@ exports.GetUsersTinyData = async (req, res) => {
   try {
     const { id } = req.decodedData;
 
-    const company = await Company.findOne({ companyId: id });
+    const company = await Company.findOne({ companyId: id});
 
     if (!company) {
       return res.status(400).json({
@@ -442,7 +443,16 @@ exports.GetUsersTinyData = async (req, res) => {
       lastDate: item.lastUpdate,
     }));
 
-    return res.status(200).json(response);
+const data = await Contract.find({ companyId: id }, { userId: 1, _id: 0 });
+
+const allUsers = await Users.find({}, { address: 1, userId: 1 });
+
+const notMy = allUsers.filter(user => !data.some(contract => contract.userId === user.userId));
+
+const notMyUser = response.filter(user => notMy.some(notMyUser => notMyUser.address === user.address));
+
+return res.status(200).json(notMyUser);
+
   } catch (error) {
     console.error("cannot get data ", error);
     return res.status(500).json({
