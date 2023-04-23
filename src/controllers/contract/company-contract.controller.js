@@ -112,7 +112,7 @@ exports.signContract = async (req, res) => {
       )
 
       const body = {
-contractId: contract.contractId,
+        contractId: contract.contractId,
         contractValue: contract.contractValue,
         contractData: JSON.stringify(contract.contractData),
         start: contract.start.toLocaleString(),

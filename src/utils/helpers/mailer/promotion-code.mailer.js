@@ -15,10 +15,9 @@ async function sendPromotionCodeEmail (email, code,description,company) {
 								<script src="https://smtpjs.com/v3/smtp.js">
 								</script>
 								<body>
-									<p>From company : </p> <b>${company}</b>
-									<p>Your Promotion code is : </p> <b>${code}</b>
-									<p>Description : </p> 
-									<p>${description}</p> 
+									<p>From company : ${company} </p> 
+									<p>Your Promotion code is : ${code} </p> 
+									<p>Description : ${description} </p> 
 								</body>
 							</html>`;
 		let transporter = nodemailer.createTransport({
