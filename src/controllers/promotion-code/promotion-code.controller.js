@@ -57,7 +57,7 @@ exports.GetPromotionCodeByCompany = async (req, res) => {
       });
     }
 
-    const promotionCode = await PromotionCode.find({ company });
+    const promotionCode = await PromotionCode.find({ companyId:id });
 
     return res.status(200).json({
       success: true,
