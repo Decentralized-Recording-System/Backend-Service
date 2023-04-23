@@ -133,6 +133,37 @@ exports.getContracts = async (req, res) => {
     });
   }
 };
+
+exports.getContractByUser = async (req, res) => {
+  try {
+    const { id } = req.decodedData;
+
+    const contract = await Contract.find({
+      userId: id,
+    });
+
+    if (contract) {
+      return res.status(200).json({
+        success: true,
+        data: contract,
+        message: "get Contract Success",
+      });
+    }
+
+    return res.status(400).json({
+      error: true,
+      status: 400,
+      message: "Please make a valid request or not your contract",
+    });
+  } catch (error) {
+    console.error("get contract error", error);
+    return res.status(500).json({
+      error: true,
+      message: "Cannot get contract ",
+    });
+  }
+};
+
 exports.getContractById = async (req, res) => {
   try {
     const { id } = req.decodedData;

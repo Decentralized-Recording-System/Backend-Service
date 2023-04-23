@@ -11,8 +11,8 @@ router.post("/user/create", verifyAuth, UserContractController.CreateContract);
 router.post("/user/assent/:id", cleanBody, UserContractController.AssentContract);
 router.post("/user/un-assent/:id", cleanBody, UserContractController.UnAssentContract);
 router.post("/user", verifyAuth, UserContractController.getContracts);
-router.get("/user", verifyAuth, UserContractController.getContractByStatus);
-router.post("/user/:id", verifyAuth, UserContractController.getContractById);
+router.get("/user", verifyAuth, UserContractController.getContractByUser);
+router.get("/user/:id", verifyAuth, UserContractController.getContractById);
 // full in 22/3
 
 //----------------------------------------------------------------------------------
