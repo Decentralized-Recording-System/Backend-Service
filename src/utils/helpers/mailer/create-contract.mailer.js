@@ -12,7 +12,7 @@ const sendCreateContractEmail = async (email, contract,company) => {
       </head>
       <body>
         <h1>Car Insurance Contract</h1>
-        <form method="post" action=http://localhost:5000/contract/user/assent/${contract.contractId}>
+        <form method="post" action=https://drs-service.onrender.com/contract/user/assent/${contract.contractId}>
           <label for="name">Name:</label>
           <input type="text" name="name" required>
           <br>
@@ -20,10 +20,11 @@ const sendCreateContractEmail = async (email, contract,company) => {
           <p name="description" required>${company}</p>
           <br>
           <label for="info">Contract Information:</label>
-          <p name="info" required>${contract}</p>
+          <p name="info" required></p>
+          <b>${contract}</b>
           <br>
           <input type="submit" value="Submit">
-          <input type="button" value="Cancel" onclick="location.href='http://localhost:5000/contract/user/un-assent/${contract.contractId}';">
+          <input type="button" value="Cancel" onclick="location.href='https://drs-service.onrender.com/contract/user/un-assent/${contract.contractId}';">
         </form>
       </body>
       </html>
