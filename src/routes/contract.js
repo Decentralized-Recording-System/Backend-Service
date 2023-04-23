@@ -22,7 +22,7 @@ router.get("/company/blockchain",verifyAuth,CompanyContractController.getContrac
 router.post("/company/sign/:id", verifyAuth, CompanyContractController.signContract);
 router.get("/company",verifyAuth,CompanyContractController.getContractByStatus);
 router.get("/company/:id",verifyAuth,CompanyContractController.getContractByCompany);
-router.get("/:id", verifyAuth, CompanyContractController.getContractById);
+router.get("/company/own-contract/:id", verifyAuth, CompanyContractController.getContractById);
 // full in 22/3
 
 module.exports = router;

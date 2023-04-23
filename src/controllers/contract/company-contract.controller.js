@@ -54,7 +54,8 @@ exports.SendEmailToUser = async (req, res) => {
       const sendCodeStatus = await sendCreateContractEmail(
         user.email,
         contract,
-        company.companyName
+        company.companyName,
+        user.name
       )
 
       if (sendCodeStatus.error) {
