@@ -366,6 +366,7 @@ exports.GetUserData = async (req, res) => {
       },
       {
         address: 1,
+        userId:1,
         carBodyType: 1,
         carChassisNo: 1,
         carDisplacement: 1,
