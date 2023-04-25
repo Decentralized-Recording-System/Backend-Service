@@ -9,6 +9,6 @@ router.post("/sent", verifyAuth, promotionCodeController.SendPromotionCodeToUser
 
 //user
 router.post("/use", verifyAuth, promotionCodeController.UsePromotionCodeById);
-router.get("/validate",verifyAuth,promotionCodeController.ValidatePromotionCodeById);
+router.post("/validate",verifyAuth,promotionCodeController.ValidatePromotionCodeById);
 // full in 22/3
 module.exports = router;
