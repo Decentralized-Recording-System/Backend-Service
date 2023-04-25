@@ -66,7 +66,7 @@ exports.GetModelContractByOwnCompany = async (req, res) => {
 
     const Models = await ModelContract.find(
       { companyId: id },
-      { modelContractName: 1, modelContractId: 1 }
+      { modelContractName: 1, modelContractId: 1,modelContractValue:1 }
     );
 
     return res.status(200).json({
@@ -155,7 +155,7 @@ exports.GetModelContractByCompany = async (req, res) => {
 
     const Models = await ModelContract.find(
       { companyId },
-      { modelContractName: 1, modelContractId: 1 }
+      { modelContractName: 1, modelContractId: 1 ,modelContractValue:1}
     );
 
     return res.status(200).json({
