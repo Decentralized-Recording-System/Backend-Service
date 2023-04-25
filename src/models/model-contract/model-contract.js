@@ -5,6 +5,7 @@ const modelContract = new Schema(
 	{
 		modelContractId: { type: String, required: true },
 		modelContractName: { type: String, required: true },
+		modelContractValue: { type: String, required: true },
 		companyId: { type: String, required: true },
 		data: [Schema.Types.Mixed]
 	},
