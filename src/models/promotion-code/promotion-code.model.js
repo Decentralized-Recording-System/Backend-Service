@@ -5,7 +5,7 @@ const promotionCode = new Schema(
   {
     promotionCodeId: { type: String, required: true, unique: true },
     promotionCodeName: { type: String, required: true, unique: true },
-    companyId: { type: String, required: true, unique: true },
+    companyId: { type: String, required: true },
     discount: { type: Number, required: true },
     description: { type: String, required: false },
     quantity: { type: Number, required: true },
